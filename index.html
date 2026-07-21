@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warlords — Full Jukebox (for Hari)</title>
+<style>
+  :root{
+    --bg0:#07060d; --bg1:#120a14; --ink:#f3e9d6; --muted:#a99c86;
+    --ember:#ff7a2c; --ember2:#ffd66b; --gold:#ebc35e; --line:rgba(235,195,94,.18);
+    --panel:rgba(20,15,24,.62); --panel2:rgba(30,22,34,.72);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    color:var(--ink); background:var(--bg0); overflow-x:hidden;
+    min-height:100%;
+  }
+  #bg{position:fixed;inset:0;width:100%;height:100%;z-index:-2;display:block}
+  /* deep vignette + warm floor glow over the canvas */
+  body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:radial-gradient(120% 80% at 50% 118%, rgba(255,120,44,.20), transparent 55%),
+               radial-gradient(140% 120% at 50% 0%, transparent 60%, rgba(0,0,0,.6));}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 220px}
+
+  header.hero{padding:54px 6px 20px;text-align:center;position:relative}
+  .crest{font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);opacity:.85}
+  h1{margin:.18em 0 .05em;font-size:clamp(32px,6vw,58px);font-weight:700;
+     letter-spacing:.01em;line-height:1;
+     text-shadow:0 2px 0 #000,0 0 34px rgba(255,140,60,.35)}
+  h1 .amp{color:var(--ember);font-style:italic}
+  .sub{color:var(--muted);font-size:15px;max-width:640px;margin:10px auto 0;line-height:1.5}
+  .count{color:var(--gold);font-weight:700}
+
+  /* transport / now playing */
+  .player{position:sticky;top:0;z-index:20;margin:22px auto 8px;
+    background:linear-gradient(180deg,var(--panel2),var(--panel));
+    border:1px solid var(--line);border-radius:16px;
+    backdrop-filter:blur(9px) saturate(1.1);
+    box-shadow:0 10px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.05)}
+  .player .row{display:flex;align-items:center;gap:14px;padding:12px 16px}
+  .btns{display:flex;align-items:center;gap:8px}
+  button.ctl{appearance:none;border:1px solid var(--line);color:var(--ink);
+    background:rgba(255,255,255,.04);border-radius:11px;cursor:pointer;
+    width:44px;height:44px;font-size:17px;display:grid;place-items:center;
+    transition:transform .08s ease,background .15s,border-color .15s}
+  button.ctl:hover{background:rgba(255,140,60,.14);border-color:rgba(255,140,60,.5)}
+  button.ctl:active{transform:scale(.92)}
+  button.ctl.play{width:54px;height:54px;font-size:21px;
+    background:radial-gradient(circle at 50% 35%,rgba(255,150,70,.28),rgba(255,140,60,.08));
+    border-color:rgba(255,140,60,.55)}
+  button.ctl.on{background:rgba(255,140,60,.22);border-color:rgba(255,150,70,.7);color:var(--ember2)}
+  .np{flex:1;min-width:0}
+  .np .title{font-size:18px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .np .kind{font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);opacity:.8}
+  .np .kind.idle{color:var(--muted)}
+  .seek{display:flex;align-items:center;gap:10px;padding:0 18px 14px}
+  .time{font-variant-numeric:tabular-nums;font-size:12px;color:var(--muted);min-width:42px;text-align:center}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;flex:1;border-radius:6px;
+    background:linear-gradient(90deg,var(--ember) 0%,var(--ember2) var(--p,0%),rgba(255,255,255,.12) var(--p,0%));
+    cursor:pointer;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;
+    background:var(--ember2);box-shadow:0 0 10px rgba(255,180,90,.9);border:2px solid #3a1e08;cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--ember2);
+    border:2px solid #3a1e08;cursor:pointer}
+
+  .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 2px 6px}
+  .search{flex:1;min-width:200px;position:relative}
+  .search input{width:100%;padding:12px 14px 12px 40px;border-radius:12px;
+    background:rgba(0,0,0,.32);border:1px solid var(--line);color:var(--ink);font-size:15px;
+    font-family:inherit}
+  .search input::placeholder{color:var(--muted)}
+  .search .mag{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:.55}
+  .chip{padding:9px 14px;border-radius:999px;border:1px solid var(--line);color:var(--muted);
+    background:rgba(255,255,255,.03);cursor:pointer;font-size:13px;letter-spacing:.02em;
+    transition:.15s;font-family:inherit}
+  .chip:hover{color:var(--ink);border-color:rgba(255,140,60,.5)}
+
+  section.grp{margin:34px 0 0}
+  .grp h2{display:flex;align-items:baseline;gap:12px;margin:0 2px 14px;font-size:15px;
+    letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:700}
+  .grp h2 .n{font-size:12px;color:var(--muted);letter-spacing:.1em;font-weight:400}
+  .grp h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:10px}
+
+  .track{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;
+    background:rgba(255,255,255,.028);border:1px solid transparent;cursor:pointer;
+    text-align:left;color:inherit;font-family:inherit;transition:.13s}
+  .track:hover{background:rgba(255,140,60,.09);border-color:rgba(255,140,60,.28)}
+  .track.playing{background:linear-gradient(90deg,rgba(255,140,60,.22),rgba(255,140,60,.05));
+    border-color:rgba(255,150,70,.6);box-shadow:0 0 24px rgba(255,120,44,.15)}
+  .track .disc{width:34px;height:34px;border-radius:9px;flex:none;display:grid;place-items:center;
+    background:radial-gradient(circle at 40% 35%,#2a2030,#14101a);border:1px solid var(--line);
+    font-size:14px;color:var(--gold)}
+  .track.playing .disc{color:var(--ember2);border-color:rgba(255,150,70,.6)}
+  .track .meta{min-width:0;flex:1}
+  .track .tt{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .track .num{font-size:11px;color:var(--muted);letter-spacing:.06em}
+  .track.playing .num{color:var(--ember2)}
+  .eq{display:none;gap:2px;align-items:flex-end;height:15px}
+  .track.playing .eq{display:flex}
+  .eq i{width:3px;background:var(--ember2);border-radius:2px;animation:eq .9s ease-in-out infinite}
+  .eq i:nth-child(2){animation-delay:.15s}.eq i:nth-child(3){animation-delay:.3s}
+  .track.paused .eq i{animation-play-state:paused;opacity:.5}
+  @keyframes eq{0%,100%{height:4px}50%{height:15px}}
+
+  .hidden{display:none!important}
+  footer{margin:56px 2px 0;color:var(--muted);font-size:12.5px;line-height:1.6;text-align:center;opacity:.8}
+  footer code{background:rgba(255,255,255,.06);padding:1px 6px;border-radius:5px;color:var(--ember2);font-size:12px}
+
+  /* walking easter-egg rig */
+  #walker{position:fixed;bottom:8px;left:0;z-index:5;pointer-events:none;
+    width:96px;height:96px;filter:drop-shadow(0 8px 6px rgba(0,0,0,.55));
+    opacity:0;transition:opacity .6s}
+  #walker img{width:100%;height:100%;display:block}
+  @media (max-width:560px){#walker{width:70px;height:70px}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="crest">War-Camp Wireless · for Hari's ears only</div>
+    <h1>Warlords <span class="amp">Jukebox</span></h1>
+    <p class="sub">Every track that ships in the game, in one place — <span class="count" id="totCount">—</span> songs.
+       Hit a name to play, or set it loose with <b>Play all</b> / <b>Shuffle</b> and let the war-camp radio run.</p>
+  </header>
+
+  <div class="player" id="player">
+    <div class="row">
+      <div class="btns">
+        <button class="ctl" id="prev" title="Previous">⏮</button>
+        <button class="ctl play" id="play" title="Play / pause">▶</button>
+        <button class="ctl" id="next" title="Next">⏭</button>
+      </div>
+      <div class="np">
+        <div class="kind idle" id="npKind">Nothing playing</div>
+        <div class="title" id="npTitle">Pick a track to begin</div>
+      </div>
+      <div class="btns">
+        <button class="ctl" id="all" title="Play all in order" style="width:auto;padding:0 14px;font-size:13px;letter-spacing:.04em">▶ All</button>
+        <button class="ctl" id="shuf" title="Shuffle" style="width:auto;padding:0 14px;font-size:13px;letter-spacing:.04em">🔀 Shuffle</button>
+      </div>
+    </div>
+    <div class="seek">
+      <span class="time" id="cur">0:00</span>
+      <input type="range" id="scrub" min="0" max="1000" value="0" step="1">
+      <span class="time" id="dur">0:00</span>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search">
+      <span class="mag">🔍</span>
+      <input id="q" type="text" placeholder="Filter by name… (e.g. frost, goblin, twins)">
+    </div>
+    <button class="chip" data-f="all">All</button>
+    <button class="chip" data-f="Themes">Themes</button>
+    <button class="chip" data-f="Card Packs">Packs</button>
+    <button class="chip" data-f="Lords &amp; Bosses">Lords</button>
+  </div>
+
+  <div id="list"></div>
+
+  <footer>
+    Streams the shipped <code>assets/music/*.ogg</code> straight off the build — served alongside this page.
+    <br>If a track shows a ✕, the <code>assets/</code> folder isn't sitting next to this file where it's hosted.
+  </footer>
+</div>
+
+<div id="walker"><img id="walkerImg" alt=""></div>
+
+<script>
+// Where the game's assets live, relative to this page (served with the repo root as web root:
+// tools/hari_music.html -> ../assets/...). Override for any host with ?base=https://host/assets/
+const BASE = ((new URLSearchParams(location.search).get("base")) || "assets/").replace(/\/?$/, "/");
+
+// ---- track data (stems of assets/music/*.ogg), grouped ----------------------
+const THEMES = ["warlords_march","cards_of_fate","assemble_the_team","play_the_right_cards",
+  "hold_the_line_city","only_so_much_sky","the_goblin_king","the_verdant_queen","the_fire_devil",
+  "the_frost_will_claim","the_skeletal_sovereign","broodmother","slime_king","slime_lords_theme",
+  "magma_magnate","gorehoof","tremor_of_earth","i_am_the_wave","sift_the_thousandfold",
+  "stamp_grind_melt_shine","kingdom_where_the_cinders_fall","circus_in_the_back_of_my",
+  "is_there_anyone_listening","bill_bill","vetch_vetch"];
+const PACKS = ["pack_vanguard","pack_steel_legion","pack_siege_works","pack_trapworks","pack_arcane_tempo",
+  "pack_pyromancy","pack_infernal_legion","pack_chaos","pack_mutagen","pack_bugs","pack_slime_swarm",
+  "pack_primordial_growth","pack_wild_pack","pack_giants","pack_blood","pack_heartbreakers",
+  "pack_cloak_dagger","pack_venom_plague","pack_final_rites","pack_spectral_host","pack_goblin_horde"];
+const LORDS = ["lord_the_twins","lord_warsmith","lord_iron_wardens","lord_sapper_chief","lord_kilnborn",
+  "lord_brass_pilgrims","lord_cinder_scavengers","lord_ashen_raiders","lord_hellfire_pack","lord_ash_witch",
+  "lord_fallen_star","lord_frost_pack","lord_frost_yeti","lord_rime_harrows","lord_pale_rider",
+  "lord_bone_rabble","lord_grave_tide","lord_carrion_court","lord_dread_court","lord_banshee_choir",
+  "lord_hushmaidens","lord_cursemonger","lord_silvertongue","lord_dreamer","lord_mimic",
+  "lord_myconid_sovereign","lord_troll_chief"];
+
+const SMALL = new Set(["the","of","in","a","an","and","to","my","is","there"]);
+function titleOf(stem){
+  return stem.replace(/^pack_|^lord_/, "").split("_").map((w,i)=>{
+    if(i>0 && SMALL.has(w)) return w;
+    return w.charAt(0).toUpperCase()+w.slice(1);
+  }).join(" ");
+}
+const GROUPS = [
+  {name:"Themes", note:"menu · battle · boss anthems", stems:THEMES},
+  {name:"Card Packs", note:"one per collectible pack", stems:PACKS},
+  {name:"Lords & Bosses", note:"villain themes", stems:LORDS},
+];
+let TRACKS = [];
+GROUPS.forEach(g=>g.stems.forEach(s=>TRACKS.push({stem:s, title:titleOf(s), group:g.name,
+  file:BASE+"music/"+s+".ogg"})));
+TRACKS.forEach((t,i)=>t.n=i+1);
+document.getElementById("totCount").textContent = TRACKS.length;
+
+// ---- render list ------------------------------------------------------------
+const listEl = document.getElementById("list");
+GROUPS.forEach(g=>{
+  const sec = document.createElement("section"); sec.className="grp"; sec.dataset.group=g.name;
+  const items = TRACKS.filter(t=>t.group===g.name);
+  sec.innerHTML = `<h2>${g.name} <span class="n">${g.note} · ${items.length}</span></h2>`;
+  const grid = document.createElement("div"); grid.className="grid";
+  items.forEach(t=>{
+    const b = document.createElement("button"); b.className="track"; b.dataset.n=t.n;
+    b.dataset.title=t.title.toLowerCase()+" "+t.stem;
+    b.innerHTML = `<span class="disc">♪</span>
+      <span class="meta"><span class="tt">${t.title}</span>
+        <span class="num">No. ${String(t.n).padStart(2,"0")}</span></span>
+      <span class="eq"><i></i><i></i><i></i></span>`;
+    b.addEventListener("click", ()=>playIndex(TRACKS.indexOf(t)));
+    grid.appendChild(b);
+  });
+  sec.appendChild(grid); listEl.appendChild(sec);
+});
+const trackEls = {}; document.querySelectorAll(".track").forEach(el=>trackEls[el.dataset.n]=el);
+
+// ---- audio engine -----------------------------------------------------------
+const audio = new Audio(); audio.preload="none";
+let cur = -1, order = TRACKS.map((_,i)=>i), shuffle=false;
+const $=id=>document.getElementById(id);
+
+function fmt(s){ if(!isFinite(s)||s<0)s=0; const m=Math.floor(s/60),x=Math.floor(s%60);
+  return m+":"+String(x).padStart(2,"0"); }
+
+function playIndex(i){
+  if(i<0||i>=TRACKS.length) return;
+  if(cur===i){ togglePlay(); return; }
+  cur=i; const t=TRACKS[i];
+  audio.src=t.file; audio.play().catch(()=>{});
+  $("npTitle").textContent=t.title;
+  $("npKind").textContent=t.group; $("npKind").classList.remove("idle");
+  Object.values(trackEls).forEach(e=>e.classList.remove("playing","paused"));
+  const el=trackEls[t.n]; if(el){ el.classList.add("playing");
+    el.scrollIntoView({block:"nearest",behavior:"smooth"}); }
+  document.title = "▶ "+t.title+" — Warlords Jukebox";
+  bg.warm=1;
+}
+function togglePlay(){ if(cur<0){ playIndex(order[0]); return; }
+  if(audio.paused) audio.play().catch(()=>{}); else audio.pause(); }
+function step(d){ if(cur<0){ playIndex(order[0]); return; }
+  let k=order.indexOf(cur); k=(k+d+order.length)%order.length; playIndex(order[k]); }
+
+$("play").onclick=togglePlay; $("next").onclick=()=>step(1); $("prev").onclick=()=>step(-1);
+$("all").onclick=()=>{ shuffle=false; $("shuf").classList.remove("on"); order=TRACKS.map((_,i)=>i); playIndex(0); };
+$("shuf").onclick=()=>{ shuffle=!shuffle; $("shuf").classList.toggle("on",shuffle);
+  if(shuffle){ order=TRACKS.map((_,i)=>i); for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+    playIndex(order[0]); } else order=TRACKS.map((_,i)=>i); };
+
+audio.addEventListener("play", ()=>{ $("play").textContent="⏸";
+  if(cur>=0&&trackEls[TRACKS[cur].n]) trackEls[TRACKS[cur].n].classList.remove("paused"); bg.warm=1; });
+audio.addEventListener("pause", ()=>{ $("play").textContent="▶";
+  if(cur>=0&&trackEls[TRACKS[cur].n]) trackEls[TRACKS[cur].n].classList.add("paused"); });
+audio.addEventListener("ended", ()=>step(1));
+audio.addEventListener("error", ()=>{ if(cur>=0){ const el=trackEls[TRACKS[cur].n];
+  if(el){ el.querySelector(".disc").textContent="✕"; el.classList.add("paused"); }
+  $("npKind").textContent="couldn't load — check assets/ path"; } });
+audio.addEventListener("timeupdate", ()=>{
+  $("cur").textContent=fmt(audio.currentTime); const d=audio.duration||0;
+  const p = d? (audio.currentTime/d*1000):0;
+  const s=$("scrub"); s.value=p; s.style.setProperty("--p",(p/10)+"%"); });
+audio.addEventListener("loadedmetadata", ()=>{ $("dur").textContent=fmt(audio.duration); });
+$("scrub").addEventListener("input", e=>{ const d=audio.duration||0;
+  if(d){ audio.currentTime = e.target.value/1000*d; } e.target.style.setProperty("--p",(e.target.value/10)+"%"); });
+
+// keyboard: space=play/pause, arrows=prev/next
+addEventListener("keydown", e=>{
+  if(e.target.tagName==="INPUT") return;
+  if(e.code==="Space"){e.preventDefault();togglePlay();}
+  else if(e.code==="ArrowRight")step(1); else if(e.code==="ArrowLeft")step(-1);
+});
+
+// ---- filter -----------------------------------------------------------------
+let filterGroup="all";
+function applyFilter(){
+  const q=$("q").value.trim().toLowerCase();
+  document.querySelectorAll("section.grp").forEach(sec=>{
+    const gOK = filterGroup==="all" || sec.dataset.group===filterGroup;
+    let shown=0;
+    sec.querySelectorAll(".track").forEach(el=>{
+      const ok = gOK && (!q || el.dataset.title.includes(q));
+      el.classList.toggle("hidden",!ok); if(ok)shown++;
+    });
+    sec.classList.toggle("hidden", shown===0);
+  });
+}
+$("q").addEventListener("input", applyFilter);
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{
+  filterGroup=c.dataset.f;
+  document.querySelectorAll(".chip").forEach(x=>x.style.borderColor="");
+  c.style.borderColor="rgba(255,140,60,.7)"; applyFilter();
+}));
+
+// ---- background: a living war-camp night (drifting embers + wandering glow) --
+const bgc=$("bg"), ctx=bgc.getContext("2d");
+const bg={warm:0};
+let W,H,embers=[];
+function resize(){ W=bgc.width=innerWidth*devicePixelRatio; H=bgc.height=innerHeight*devicePixelRatio;
+  bgc.style.width=innerWidth+"px"; bgc.style.height=innerHeight+"px"; }
+addEventListener("resize",resize); resize();
+function seed(){ embers=[]; const N=Math.min(90,Math.floor(innerWidth/16));
+  for(let i=0;i<N;i++)embers.push(mkEmber(true)); }
+function mkEmber(any){ return {x:Math.random()*W, y:any?Math.random()*H:H+20,
+  r:(1+Math.random()*2.4)*devicePixelRatio, v:(0.3+Math.random()*0.9)*devicePixelRatio,
+  drift:(Math.random()-0.5)*0.5*devicePixelRatio, life:Math.random(), tw:Math.random()*6.28}; }
+seed();
+let tt=0;
+function frame(){
+  tt+=0.006; bg.warm+= ((cur>=0&&!audio.paused?1:0)-bg.warm)*0.02;
+  // base gradient
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,"#07060d"); g.addColorStop(0.6,"#0e0912"); g.addColorStop(1,"#160a10");
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  // wandering warm glow (Lissajous) — brightens with the music
+  const gx=W*(0.5+0.32*Math.sin(tt*0.8)), gy=H*(0.66+0.2*Math.sin(tt*1.13+1));
+  const rad=Math.max(W,H)*(0.5+0.08*Math.sin(tt*1.7));
+  const glow=ctx.createRadialGradient(gx,gy,0,gx,gy,rad);
+  const a=0.10+0.16*bg.warm;
+  glow.addColorStop(0,`rgba(255,130,50,${a})`); glow.addColorStop(0.5,`rgba(150,40,60,${a*0.4})`);
+  glow.addColorStop(1,"rgba(0,0,0,0)");
+  ctx.fillStyle=glow; ctx.fillRect(0,0,W,H);
+  // embers
+  ctx.globalCompositeOperation="lighter";
+  for(const e of embers){
+    e.y-=e.v; e.x+=e.drift+Math.sin(e.y*0.01+e.tw)*0.3*devicePixelRatio; e.life-=0.0016;
+    if(e.y<-20||e.life<=0)Object.assign(e,mkEmber(false));
+    const fl=0.55+0.45*Math.sin(tt*6+e.tw);
+    const al=Math.max(0,Math.min(1,e.life))*fl*(0.5+0.5*bg.warm);
+    ctx.beginPath(); ctx.arc(e.x,e.y,e.r,0,6.28);
+    ctx.fillStyle=`rgba(255,${140+Math.floor(90*fl)},70,${al})`; ctx.fill();
+  }
+  ctx.globalCompositeOperation="source-over";
+  requestAnimationFrame(frame);
+}
+frame();
+
+// ---- easter egg: a random enemy rig wanders across the bottom ---------------
+const RIGS=["e_brute","cutthroat","skulker","goblin","bonewalker","frost_yeti","wight",
+  "banshee","beast","berserker","archer","bat","acid_slime","ash_witch","legionnaire"];
+const walker=$("walker"), wimg=$("walkerImg");
+function march(){
+  const rig=RIGS[Math.floor(Math.random()*RIGS.length)];
+  const l2r=Math.random()<0.5;
+  const dur=15000+Math.random()*11000;
+  wimg.onerror=()=>{ walker.style.opacity=0; };   // sprites not hosted → just skip the cameo quietly
+  wimg.src=BASE+"sprites/"+rig+".svg";
+  const W2=innerWidth, off=140;
+  const from = l2r? -off : W2+off, to = l2r? W2+off : -off;
+  wimg.style.transform = l2r? "scaleX(1)" : "scaleX(-1)";
+  walker.style.transition="none"; walker.style.transform=`translateX(${from}px)`;
+  walker.style.opacity=1;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    walker.style.transition=`transform ${dur}ms linear`;
+    walker.style.transform=`translateX(${to}px)`;
+  }));
+  // a little walking bob, independent of the cross-screen glide
+  wimg.animate([{transform:wimg.style.transform+" translateY(0)"},
+    {transform:wimg.style.transform+" translateY(-9px)"},
+    {transform:wimg.style.transform+" translateY(0)"}],
+    {duration:520,iterations:Math.round(dur/520),easing:"ease-in-out"});
+  setTimeout(march, dur+2200+Math.random()*6000);
+}
+setTimeout(march, 2500);
+</script>
+</body>
+</html>

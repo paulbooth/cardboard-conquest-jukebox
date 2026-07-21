@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- The Lost Witch: pointed hat, pale face, glowing arcane eyes, drifting wisps -->
+  <!-- witch hat, slightly bent -->
+  <path d="M30 3 L44 30 L20 30 Z" fill="#3a2a52" stroke="#1f1530" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M29 8 Q33 9 32 14" stroke="#b48ad8" stroke-width="1.6" fill="none"/>
+  <ellipse cx="32" cy="30" rx="16" ry="4" fill="#4a3566" stroke="#1f1530" stroke-width="1.6"/>
+  <!-- a small arcane star on the band -->
+  <path d="M24 27 l1.2 2.4 l2.6 0.2 l-2 1.7 l0.7 2.5 l-2.2 -1.4 l-2.2 1.4 l0.7 -2.5 l-2 -1.7 l2.6 -0.2 Z" fill="#c7a6ea"/>
+  <!-- pale face -->
+  <path d="M20 32 Q20 30 32 30 Q44 30 44 32 L42 46 Q37 54 32 56 Q27 54 22 46 Z" fill="#9a94a8" stroke="#463f56" stroke-width="2" stroke-linejoin="round"/>
+  <!-- glowing arcane eyes (violet, not embers) -->
+  <ellipse cx="26" cy="38" rx="3" ry="2.4" fill="#9a6ae0"/>
+  <ellipse cx="38" cy="38" rx="3" ry="2.4" fill="#9a6ae0"/>
+  <circle cx="26" cy="38" r="1.1" fill="#e6d4ff"/>
+  <circle cx="38" cy="38" r="1.1" fill="#e6d4ff"/>
+  <!-- faint rune marks on the cheeks -->
+  <path d="M23 44 L25 46 L23 48 M41 44 L39 46 L41 48" stroke="#6a5a86" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+  <!-- thin mouth -->
+  <path d="M27 49 Q32 51 37 49" fill="none" stroke="#463f56" stroke-width="1.6" stroke-linecap="round"/>
+  <!-- drifting spirit wisps -->
+  <circle cx="14" cy="40" r="1.6" fill="#a98ad8" opacity="0.85"/>
+  <circle cx="50" cy="35" r="1.4" fill="#c7a6ea" opacity="0.8"/>
+  <circle cx="12" cy="30" r="1.0" fill="#8f6ac8" opacity="0.7"/>
+</svg>

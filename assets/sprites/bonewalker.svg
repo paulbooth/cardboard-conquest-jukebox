@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Bonewalker: a bare skeleton mid-stride, ribcage showing, femur club -->
+  <!-- bone legs -->
+  <path d="M27 44 L23 57 M35 44 L39 56" stroke="#dcdcdc" stroke-width="3.4" stroke-linecap="round"/>
+  <circle cx="23" cy="57" r="2" fill="#ececec" stroke="#242424" stroke-width="1"/>
+  <circle cx="39" cy="56" r="2" fill="#ececec" stroke="#242424" stroke-width="1"/>
+  <!-- spine + pelvis -->
+  <path d="M31 24 L31 40" stroke="#dcdcdc" stroke-width="3" stroke-linecap="round"/>
+  <path d="M25 42 Q31 47 37 42 L36 39 L26 39 Z" fill="#ececec" stroke="#242424" stroke-width="1.6" stroke-linejoin="round"/>
+  <!-- ribcage: three rib pairs -->
+  <path d="M31 26 Q22 27 22 31 M31 26 Q40 27 40 31 M31 30 Q23 31 23 35 M31 30 Q39 31 39 35 M31 34 Q25 35 25 38 M31 34 Q37 35 37 38"
+        fill="none" stroke="#dcdcdc" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- skull -->
+  <circle cx="31" cy="15" r="6.6" fill="#ececec" stroke="#242424" stroke-width="2"/>
+  <circle cx="28.4" cy="14" r="1.9" fill="#242424"/>
+  <circle cx="34" cy="14" r="1.9" fill="#242424"/>
+  <path d="M28 19.4 L34.5 19.4 M29.6 19.4 L29.6 21.4 M32.8 19.4 L32.8 21.4" stroke="#242424" stroke-width="1.2"/>
+  <!-- femur club raised -->
+  <path d="M38 28 L50 20" stroke="#dcdcdc" stroke-width="3.4" stroke-linecap="round"/>
+  <path d="M50 20 L58 13" stroke="#ececec" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="59.4" cy="11" r="2.6" fill="#ececec" stroke="#242424" stroke-width="1.2"/>
+  <circle cx="56" cy="9.4" r="2.6" fill="#ececec" stroke="#242424" stroke-width="1.2"/>
+</svg>

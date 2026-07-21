@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- ice horns -->
+  <path d="M20 20 L16 7 L25 16 Z" fill="#bfe6f5" stroke="#6fa8c4" stroke-width="1.4" stroke-linejoin="round"/>
+  <path d="M44 20 L48 7 L39 16 Z" fill="#bfe6f5" stroke="#6fa8c4" stroke-width="1.4" stroke-linejoin="round"/>
+  <!-- fluffy fur head (scalloped outline) -->
+  <path d="M13 34 Q11 30 14 27 Q12 22 17 21 Q18 15 24 17 Q26 12 32 15 Q38 12 40 17
+           Q46 15 47 21 Q52 22 50 27 Q53 30 51 34 Q54 40 49 44 Q50 51 42 52
+           Q38 57 32 54 Q26 57 22 52 Q14 51 15 44 Q10 40 13 34 Z"
+        fill="#eef6fb" stroke="#9cc3d6" stroke-width="2" stroke-linejoin="round"/>
+  <!-- shaded inner face -->
+  <ellipse cx="32" cy="38" rx="15" ry="14" fill="#dcebf4" opacity="0.55"/>
+  <!-- icy brows -->
+  <path d="M21 32 L29 34" stroke="#7fb4cf" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M43 32 L35 34" stroke="#7fb4cf" stroke-width="2.4" stroke-linecap="round"/>
+  <!-- glowing blue eyes -->
+  <ellipse cx="25" cy="37" rx="3.4" ry="3.8" fill="#8fdcff"/>
+  <ellipse cx="39" cy="37" rx="3.4" ry="3.8" fill="#8fdcff"/>
+  <circle cx="25" cy="37.5" r="1.5" fill="#1d5b82"/>
+  <circle cx="39" cy="37.5" r="1.5" fill="#1d5b82"/>
+  <!-- nose -->
+  <path d="M30 41 Q32 44 34 41 Z" fill="#9cc3d6"/>
+  <!-- snarling mouth with fangs -->
+  <path d="M24 46 Q32 50 40 46 L40 49 Q32 53 24 49 Z" fill="#2c3a47"/>
+  <path d="M26 46.5 L27 50 L29 47 Z" fill="#ffffff"/>
+  <path d="M38 46.5 L37 50 L35 47 Z" fill="#ffffff"/>
+  <!-- frost flecks -->
+  <circle cx="17" cy="30" r="1.1" fill="#bfe6f5"/>
+  <circle cx="47" cy="30" r="1.1" fill="#bfe6f5"/>
+</svg>

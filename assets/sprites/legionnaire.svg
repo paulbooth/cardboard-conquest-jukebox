@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Legionnaire: Roman — curved rectangular scutum, crested galea, red tunic, gladius. -->
+  <rect x="26" y="46" width="6" height="10" rx="2" fill="#6a4a2a"/>
+  <rect x="34" y="46" width="6" height="10" rx="2" fill="#6a4a2a"/>
+  <!-- red tunic / segmented lorica -->
+  <rect x="22" y="22" width="18" height="22" rx="5" fill="#b0402f" stroke="#2a1414" stroke-width="2"/>
+  <path d="M23 28 h16 M23 33 h16 M23 38 h16" stroke="#7a2a1e" stroke-width="1.6"/>
+  <!-- galea with a transverse red crest -->
+  <rect x="25" y="7" width="14" height="14" rx="4" fill="#c9a24a" stroke="#2a1414" stroke-width="2"/>
+  <rect x="25" y="12" width="14" height="3" fill="#2a1414"/>
+  <path d="M22 6 q10 -6 20 0 q-10 3 -20 0 z" fill="#b23020" stroke="#2a1414" stroke-width="1.4"/>
+  <!-- gladius (short sword) -->
+  <rect x="46" y="19" width="3" height="16" rx="1" fill="#e2e6ef" stroke="#2a1414" stroke-width="1"/>
+  <rect x="43.5" y="33" width="8" height="2.6" rx="1" fill="#8a6a3a"/>
+  <!-- curved rectangular scutum -->
+  <rect x="5" y="18" width="17" height="30" rx="5" fill="#a8362a" stroke="#2a1414" stroke-width="2.4"/>
+  <path d="M13.5 20 v26" stroke="#e8c86a" stroke-width="2.2"/>
+  <path d="M8 26 q5.5 4 11 0 M8 40 q5.5 -4 11 0" fill="none" stroke="#e8c86a" stroke-width="2"/>
+  <circle cx="13.5" cy="33" r="3" fill="#e8c86a" stroke="#2a1414" stroke-width="1.2"/>
+</svg>
