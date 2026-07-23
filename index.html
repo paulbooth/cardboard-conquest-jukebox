@@ -211,14 +211,71 @@ function titleOf(stem){
     return w.charAt(0).toUpperCase()+w.slice(1);
   }).join(" ");
 }
+// Real song titles (from tools/suno/*_songs.json). Where a track has one, it becomes the
+// display name and the faction/pack/lord name (titleOf) drops to the subtitle. Tracks not
+// listed here — the general themes and the older hand-named boss themes — are named by their
+// stem already, so titleOf() is both the song name and the whole label.
+const SONGS = {
+  "pack_vanguard": "On Arrival",
+  "pack_steel_legion": "Hold the Line",
+  "pack_siege_works": "Hold and Fire",
+  "pack_trapworks": "Watch Your Step",
+  "pack_arcane_tempo": "The Beat Cop's Blues",
+  "pack_pyromancy": "Everything Burns",
+  "pack_infernal_legion": "Blood Summon",
+  "pack_chaos": "Double or Nothing",
+  "pack_mutagen": "Unlock the Beast",
+  "pack_bugs": "Hive Mind",
+  "pack_slime_swarm": "Split and Multiply",
+  "pack_primordial_growth": "The Slow Green",
+  "pack_wild_pack": "Blood Moon Runs",
+  "pack_giants": "Big Slow Steps",
+  "pack_blood": "Every Drop",
+  "pack_heartbreakers": "Swoon",
+  "pack_cloak_dagger": "Cover of Night",
+  "pack_venom_plague": "Patient Zero",
+  "pack_final_rites": "Death Toll",
+  "pack_spectral_host": "March of the Unliving",
+  "pack_goblin_horde": "Green Tide",
+  "lord_the_twins": "Back to Back",
+  "lord_warsmith": "Raw Material",
+  "lord_iron_wardens": "Not One Step",
+  "lord_sapper_chief": "No Eyebrows Left",
+  "lord_kilnborn": "Every Shattered Piece",
+  "lord_brass_pilgrims": "The Pace of Faith",
+  "lord_cinder_scavengers": "Bolt It Down",
+  "lord_ashen_raiders": "Nothing Left to Lose",
+  "lord_hellfire_pack": "Open a Vein",
+  "lord_ash_witch": "The Whole Book",
+  "lord_fallen_star": "Nearest Approach",
+  "lord_frost_pack": "Down the Pass",
+  "lord_frost_yeti": "Slow as the Cold",
+  "lord_rime_harrows": "No Brakes",
+  "lord_pale_rider": "Takes the Biggest First",
+  "lord_bone_rabble": "Won't Stay Dead",
+  "lord_grave_tide": "The Sea Does Not Stop",
+  "lord_carrion_court": "Whoever Loses First",
+  "lord_dread_court": "The Court Convenes",
+  "lord_banshee_choir": "The Dirge of Withering",
+  "lord_hushmaidens": "The Word Is Hush",
+  "lord_cursemonger": "The Ledger Comes Due",
+  "lord_silvertongue": "Everything Must Go",
+  "lord_dreamer": "Counting Sheep",
+  "lord_mimic": "Fight Yourself",
+  "lord_myconid_sovereign": "Already Part of Me",
+  "lord_troll_chief": "End It With the Log",
+};
 const GROUPS = [
   {name:"Themes", note:"menu · battle · ambient", stems:THEMES},
   {name:"Card Packs", note:"one per collectible pack", stems:PACKS},
   {name:"Lords & Bosses", note:"act bosses & faction lords", stems:LORDS},
 ];
 let TRACKS = [];
-GROUPS.forEach(g=>g.stems.forEach(s=>TRACKS.push({stem:s, title:titleOf(s), group:g.name,
-  file:BASE+"music/"+s+".ogg"})));
+GROUPS.forEach(g=>g.stems.forEach(s=>{
+  const faction=titleOf(s), song=SONGS[s]||faction;
+  TRACKS.push({stem:s, title:song, faction:(song!==faction?faction:""), group:g.name,
+    file:BASE+"music/"+s+".ogg"});
+}));
 TRACKS.forEach((t,i)=>t.n=i+1);
 document.getElementById("totCount").textContent = TRACKS.length;
 
@@ -231,10 +288,11 @@ GROUPS.forEach(g=>{
   const grid = document.createElement("div"); grid.className="grid";
   items.forEach(t=>{
     const b = document.createElement("button"); b.className="track"; b.dataset.n=t.n;
-    b.dataset.title=t.title.toLowerCase()+" "+t.stem;
+    b.dataset.title=(t.title+" "+t.faction+" "+t.stem).toLowerCase();
+    const sub = (t.faction ? t.faction+" · " : "")+"No. "+String(t.n).padStart(2,"0");
     b.innerHTML = `<span class="disc">♪</span>
       <span class="meta"><span class="tt">${t.title}</span>
-        <span class="num">No. ${String(t.n).padStart(2,"0")}</span></span>
+        <span class="num">${sub}</span></span>
       <span class="eq"><i></i><i></i><i></i></span>`;
     b.addEventListener("click", ()=>playIndex(TRACKS.indexOf(t)));
     grid.appendChild(b);
@@ -257,7 +315,8 @@ function playIndex(i){
   cur=i; const t=TRACKS[i];
   audio.src=t.file; audio.play().catch(()=>{});
   $("npTitle").textContent=t.title;
-  $("npKind").textContent=t.group; $("npKind").classList.remove("idle");
+  $("npKind").textContent=t.faction ? t.group+" · "+t.faction : t.group;
+  $("npKind").classList.remove("idle");
   Object.values(trackEls).forEach(e=>e.classList.remove("playing","paused"));
   const el=trackEls[t.n]; if(el){ el.classList.add("playing");
     el.scrollIntoView({block:"nearest",behavior:"smooth"}); }
