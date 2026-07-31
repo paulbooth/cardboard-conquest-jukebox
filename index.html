@@ -110,8 +110,13 @@
   .search .mag{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:.55}
   .chip{padding:9px 14px;border-radius:999px;border:1px solid var(--line);color:var(--muted);
     background:rgba(255,255,255,.03);cursor:pointer;font-size:13px;letter-spacing:.02em;
-    transition:.15s;font-family:inherit}
+    transition:.15s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
   .chip:hover{color:var(--ink);border-color:rgba(255,140,60,.5)}
+  .chip.on{color:var(--ink);border-color:rgba(255,140,60,.7);background:rgba(255,140,60,.13)}
+  .chip.on svg.star{color:var(--ember2)}
+  /* drawn, not a glyph — a ★ renders as a blue emoji on some Macs */
+  svg.star{fill:currentColor;flex:none}
+  .nohits{margin:34px 2px;color:var(--muted);font-size:14px;text-align:center;line-height:1.6}
 
   section.grp{margin:34px 0 0}
   .grp h2{display:flex;align-items:baseline;gap:12px;margin:0 2px 14px;font-size:15px;
@@ -135,6 +140,18 @@
   .track .tt{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
   .track .num{font-size:11px;color:var(--muted);letter-spacing:.06em}
   .track.playing .num{color:var(--ember2)}
+  /* a pick of the litter — gold star pinned to the right of the row */
+  .track .rec{flex:none;color:var(--gold);opacity:.85;display:grid;place-items:center;
+    filter:drop-shadow(0 0 7px rgba(255,180,90,.4))}
+  .track.playing .rec{color:var(--ember2);opacity:1}
+  /* the lyric line that matched the search, shown only while it's the reason you see this row */
+  .track .hit{display:none;font-size:11.5px;line-height:1.5;color:var(--muted);margin-top:3px}
+  .track.lyrhit .hit{display:block}
+  /* the quote gets one line and an ellipsis; the counter keeps its own so it never gets cut */
+  .track .hit .q{display:block;font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .track .hit .more{display:block;color:var(--gold);opacity:.7;font-size:11px}
+  mark{background:rgba(255,140,60,.3);color:var(--ember2);border-radius:3px;padding:0 2px}
+  .lyric mark{background:rgba(255,140,60,.22);color:#ffe2b0}
   .eq{display:none;gap:2px;align-items:flex-end;height:15px}
   .track.playing .eq{display:flex}
   .eq i{width:3px;background:var(--ember2);border-radius:2px;animation:eq .9s ease-in-out infinite}
@@ -167,7 +184,7 @@
     <h1>Warlords <span class="amp">Jukebox</span></h1>
     <p class="sub">Every track that ships in the game, in one place — <span class="count" id="totCount">—</span> songs.
        Hit a name to play, or set it loose with <b>Play all</b> / <b>Shuffle</b> and let the war-camp radio run.
-       Open <b>Lyrics</b> to read along with whatever's on.</p>
+       Open <b>Lyrics</b> to read along with whatever's on. Short on time? Start with the starred ones.</p>
   </header>
 
   <div class="player" id="player">
@@ -201,15 +218,17 @@
   <div class="toolbar">
     <div class="search">
       <span class="mag">🔍</span>
-      <input id="q" type="text" placeholder="Filter by name… (e.g. frost, goblin, twins)">
+      <input id="q" type="text" placeholder="Search songs, lords, or lyrics… (e.g. brother clang, back to back)">
     </div>
-    <button class="chip" data-f="all">All</button>
+    <button class="chip on" data-f="all">All</button>
+    <button class="chip" data-f="rec" id="recChip" title="A short list to start with">Recommended</button>
     <button class="chip" data-f="Themes">Themes</button>
     <button class="chip" data-f="Card Packs">Packs</button>
     <button class="chip" data-f="Lords &amp; Bosses">Lords</button>
   </div>
 
   <div id="list"></div>
+  <p class="nohits hidden" id="noHits"></p>
 
   <footer>
     Streams the shipped <code>assets/music/*.ogg</code> straight off the build — served alongside this page.
@@ -252,8 +271,11 @@ const LORDS = [
 
 const SMALL = new Set(["the","of","in","a","an","and","to","my","is","there"]);
 function titleOf(stem){
-  return stem.replace(/^pack_|^lord_/, "").split("_").map((w,i)=>{
-    if(i>0 && SMALL.has(w)) return w;
+  const ws = stem.replace(/^pack_|^lord_/, "").split("_");
+  return ws.map((w,i)=>{
+    // a small word stays small in the middle of a title, never at either end —
+    // the song really is called "Circus in the Back of My", trailing word and all
+    if(i>0 && i<ws.length-1 && SMALL.has(w)) return w;
     return w.charAt(0).toUpperCase()+w.slice(1);
   }).join(" ");
 }
@@ -311,34 +333,107 @@ const SONGS = {
   "lord_myconid_sovereign": "Already Part of Me",
   "lord_troll_chief": "End It With the Log",
 };
+// Who the song belongs to. The stem is a filename, not a name — "lord_hushmaidens" is
+// the folder the Hushmaidens' song sits in, but the enemy you fight is Mum, the Word.
+// These are the `name` fields of scripts/data/enemy_lords.gd, one per "song" entry
+// (a couple of lords own two songs). Keep in sync when a lord is renamed or added.
+const LORD_NAMES = {
+  "the_goblin_king":"Grix the Goblin",
+  "sift_the_thousandfold":"Sift, the Thousandfold",
+  "the_fire_devil":"The Fire Devil",
+  "tremor_of_earth":"The Elder Treant",
+  "the_skeletal_sovereign":"Rex Mortifer",
+  "gorehoof":"Gorehoof & the Boar Herd",
+  "broodmother":"The Broodmother",
+  "the_verdant_queen":"Verdy B. Queen",
+  "vetch_vetch":"The Bog Trappers",
+  "bill_bill":"The Bloodhorn Warband",
+  "stamp_grind_melt_shine":"The Brass Colossus",
+  "the_frost_will_claim":"The Avatar of Winter",
+  "slime_king":"Sump-Suzerain, Sultan of Slime",
+  "slime_lords_theme":"Sump-Suzerain, Sultan of Slime",
+  "magma_magnate":"Magma Magnate",
+  "kingdom_where_the_cinders_fall":"Magma Magnate",
+  "lord_the_twins":"The Twins",
+  "lord_warsmith":"The Warsmith",
+  "lord_iron_wardens":"The Iron Wardens",
+  "lord_sapper_chief":"Blastcap, the Powder-Reeve",
+  "lord_kilnborn":"Vitrix, the Kilnmaiden",
+  "lord_brass_pilgrims":"Brother Clang, the Bell-Prior",
+  "lord_cinder_scavengers":"Rusty",
+  "lord_ashen_raiders":"Ashen Raiders",
+  "lord_hellfire_pack":"The Blood Hunt",
+  "lord_ash_witch":"The Lost Witch",
+  "lord_fallen_star":"Perihelion, the Fallen Star",
+  "lord_frost_pack":"Hoarfrost, the Rime-Jarl",
+  "lord_frost_yeti":"The Frost Yeti",
+  "lord_rime_harrows":"Sledge Hammarsson",
+  "lord_pale_rider":"The Pale Rider",
+  "lord_bone_rabble":"The Bone Rabble",
+  "lord_grave_tide":"The Grave Tide",
+  "lord_carrion_court":"The Carrion Court",
+  "lord_dread_court":"The Dread Court",
+  "lord_banshee_choir":"Lamenta, the Dirge-Cantrix",
+  "lord_hushmaidens":"Mum, the Word",
+  "lord_cursemonger":"The Cursemonger",
+  "lord_silvertongue":"Silvertongue's Racket",
+  "lord_dreamer":"Wynken, the Dreaming",
+  "lord_mimic":"The Mimic",
+  "lord_myconid_sovereign":"Amanita, the Sporecrown",
+  "lord_troll_chief":"Simple Ton",
+};
+// Where the lord is a warband rather than a person, the commander has a name of their
+// own. Never shown — just more things you can type into the search and still land here.
+const ALIASES = {
+  "lord_iron_wardens":"Haldric, the Iron Castellan",
+  "vetch_vetch":"Vetch, the Bog-Vizier",
+  "bill_bill":"Bill the Bull-Blooded",
+  "lord_carrion_court":"Cadric, the Carrion-Despot",
+  "lord_bone_rabble":"Ossric, the Marrow-Mormaer",
+  "lord_dread_court":"Fear Drinker",
+};
+// The short list to hand someone who asks "which one should I put on first?"
+const REC = new Set(["slime_lords_theme","tremor_of_earth","circus_in_the_back_of_my",
+  "the_goblin_king","broodmother","assemble_the_team","bill_bill","lord_brass_pilgrims"]);
+const STAR = '<svg class="star" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">'+
+  '<path d="M12 2.1l3 6.2 6.8 1-4.9 4.8 1.2 6.8L12 17.6 5.9 20.9l1.2-6.8L2.2 9.3l6.8-1z"/></svg>';
+
 const GROUPS = [
   {name:"Themes", note:"menu · battle · ambient", stems:THEMES},
   {name:"Card Packs", note:"one per collectible pack", stems:PACKS},
   {name:"Lords & Bosses", note:"act bosses & faction lords", stems:LORDS},
 ];
+// "Broodmother" and "The Broodmother" are the same words twice — drop the subtitle then.
+const same = (a,b) => a.toLowerCase().replace(/^the\s+/,"") === b.toLowerCase().replace(/^the\s+/,"");
 let TRACKS = [];
 GROUPS.forEach(g=>g.stems.forEach(s=>{
-  const faction=titleOf(s), song=SONGS[s]||faction;
-  TRACKS.push({stem:s, title:song, faction:(song!==faction?faction:""), group:g.name,
-    file:BASE+"music/"+s+".ogg"});
+  const owner = LORD_NAMES[s] || titleOf(s), song = SONGS[s] || titleOf(s);
+  TRACKS.push({stem:s, title:song, faction:(same(song,owner)?"":owner), group:g.name,
+    alias:ALIASES[s]||"", rec:REC.has(s), file:BASE+"music/"+s+".ogg"});
 }));
 TRACKS.forEach((t,i)=>t.n=i+1);
 document.getElementById("totCount").textContent = TRACKS.length;
+document.getElementById("recChip").insertAdjacentHTML("afterbegin", STAR);
 
 // ---- render list ------------------------------------------------------------
 const listEl = document.getElementById("list");
 GROUPS.forEach(g=>{
   const sec = document.createElement("section"); sec.className="grp"; sec.dataset.group=g.name;
   const items = TRACKS.filter(t=>t.group===g.name);
-  sec.innerHTML = `<h2>${g.name} <span class="n">${g.note} · ${items.length}</span></h2>`;
+  sec.innerHTML = `<h2>${g.name} <span class="n" data-note="${g.note}" data-tot="${items.length}"
+    >${g.note} · ${items.length}</span></h2>`;
   const grid = document.createElement("div"); grid.className="grid";
   items.forEach(t=>{
     const b = document.createElement("button"); b.className="track"; b.dataset.n=t.n;
-    b.dataset.title=(t.title+" "+t.faction+" "+t.stem).toLowerCase();
+    // stem included so the old filename words ("hushmaidens") still find the track
+    b.dataset.title=(t.title+" "+t.faction+" "+t.alias+" "+t.stem.replace(/_/g," ")).toLowerCase();
     const sub = (t.faction ? t.faction+" · " : "")+"No. "+String(t.n).padStart(2,"0");
+    b.title = t.title + (t.faction ? " — "+t.faction : "");   // the column truncates the long ones
     b.innerHTML = `<span class="disc">♪</span>
       <span class="meta"><span class="tt">${t.title}</span>
-        <span class="num">${sub}</span></span>
+        <span class="num">${sub}</span>
+        <span class="hit"></span></span>
+      ${t.rec ? `<span class="rec" title="Recommended">${STAR}</span>` : ""}
       <span class="eq"><i></i><i></i><i></i></span>`;
     b.addEventListener("click", ()=>playIndex(TRACKS.indexOf(t)));
     grid.appendChild(b);
@@ -375,11 +470,19 @@ function togglePlay(){ if(cur<0){ playIndex(order[0]); return; }
 function step(d){ if(cur<0){ playIndex(order[0]); return; }
   let k=order.indexOf(cur); k=(k+d+order.length)%order.length; playIndex(order[k]); }
 
+// Play all / Shuffle run whatever the list is showing — filter to Recommended, hit All, and
+// that's the eight you get. With no filter on, it's still the whole 73 in order.
+function queue(){
+  const v=TRACKS.map((_,i)=>i).filter(i=>{ const el=trackEls[TRACKS[i].n];
+    return el && !el.classList.contains("hidden") && !el.closest("section.grp").classList.contains("hidden"); });
+  return v.length ? v : TRACKS.map((_,i)=>i);
+}
 $("play").onclick=togglePlay; $("next").onclick=()=>step(1); $("prev").onclick=()=>step(-1);
-$("all").onclick=()=>{ shuffle=false; $("shuf").classList.remove("on"); order=TRACKS.map((_,i)=>i); playIndex(0); };
+$("all").onclick=()=>{ shuffle=false; $("shuf").classList.remove("on"); order=queue(); playIndex(order[0]); };
 $("shuf").onclick=()=>{ shuffle=!shuffle; $("shuf").classList.toggle("on",shuffle);
-  if(shuffle){ order=TRACKS.map((_,i)=>i); for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
-    playIndex(order[0]); } else order=TRACKS.map((_,i)=>i); };
+  order=queue();
+  if(shuffle){ for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+    playIndex(order[0]); } };
 
 audio.addEventListener("play", ()=>{ $("play").textContent="⏸";
   if(cur>=0&&trackEls[TRACKS[cur].n]) trackEls[TRACKS[cur].n].classList.remove("paused"); bg.warm=1; });
@@ -403,7 +506,20 @@ $("scrub").addEventListener("input", e=>{ const d=audio.duration||0;
 // markers — [Chorus], [Verse 2 - close warm vocal, hand drums low] — so they render
 // as a label plus a dim note rather than as sung text. Everything else is verbatim.
 let lyOpen = false;
+let hlQuery = "";                                 // whatever's in the search box, so the drawer marks it too
 const esc = s => s.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+// escape, and wrap every occurrence of q in a <mark>. Splits the RAW text (not the escaped
+// html) so a query never lands half-inside an &amp;.
+function escMark(s, q){
+  if(!q) return esc(s);
+  const low=s.toLowerCase(); let out="", i=0, k;
+  while((k=low.indexOf(q,i))>=0){
+    out += esc(s.slice(i,k)) + "<mark>" + esc(s.slice(k,k+q.length)) + "</mark>";
+    i = k+q.length;
+  }
+  return out + esc(s.slice(i));
+}
 
 function splitSec(s){
   const m = /\s+[-–—]\s+|:\s*/.exec(s);
@@ -421,7 +537,7 @@ function renderLyrics(text){
     const whole=/^\[(.+)\]$/.exec(t);             // a section of its own: [Chorus]
     if(whole){ flush(); out.push(tag(...splitSec(whole[1]),"sec")); return; }
     const who=/^\[([^\]]+)\]\s*(.+)$/.exec(t);    // who sings this line: [Both] Back to back.
-    buf.push(who ? tag(...splitSec(who[1]),"who")+esc(who[2]) : esc(t));
+    buf.push(who ? tag(...splitSec(who[1]),"who")+escMark(who[2],hlQuery) : escMark(t,hlQuery));
   });
   flush();
   return out.join("");
@@ -461,24 +577,69 @@ addEventListener("keydown", e=>{
 });
 
 // ---- filter -----------------------------------------------------------------
+// Two ways in: the name (song, lord, old filename) and the words themselves. A track that
+// only matches on its words says so, with the line that matched.
 let filterGroup="all";
+let lyIndex=null;                 // built on the first lyric search — LYRICS is declared at the foot of this file
+function lyricIndex(){
+  if(lyIndex) return lyIndex;
+  lyIndex={};
+  for(const stem in LYRICS){
+    // [Chorus] and [Verse 2 - close warm vocal] are the writer's notes, not sung — searching
+    // "chorus" shouldn't return all 73 songs
+    const lines = LYRICS[stem].split("\n").map(l=>l.replace(/\[[^\]]*\]/g,"").trim()).filter(Boolean);
+    lyIndex[stem] = {lines, low:lines.map(l=>l.toLowerCase()),
+                     flat:lines.join(" "), flow:lines.join(" ").toLowerCase()};
+  }
+  return lyIndex;
+}
+function lyricHit(stem,q){
+  const e=lyricIndex()[stem]; if(!e) return "";
+  let first=-1, n=0;
+  for(let i=0;i<e.low.length;i++) if(e.low[i].includes(q)){ if(first<0)first=i; n++; }
+  if(first>=0)
+    return `<span class="q">&ldquo;${escMark(e.lines[first],q)}&rdquo;</span>`
+         + (n>1?`<span class="more">+${n-1} more line${n>2?"s":""}</span>`:"");
+  // the phrase straddles a line break — quote a window around it instead
+  const k=e.flow.indexOf(q); if(k<0) return "";
+  const a=Math.max(0,k-34), b=Math.min(e.flat.length,k+q.length+34);
+  return `<span class="q">${a?"&hellip;":""}${escMark(e.flat.slice(a,b),q)}${b<e.flat.length?"&hellip;":""}</span>`;
+}
 function applyFilter(){
-  const q=$("q").value.trim().toLowerCase();
+  const raw=$("q").value.trim(), q=raw.toLowerCase();
+  const deep = q.length>=3;       // one or two letters would match the words of nearly every song
+  let total=0;
   document.querySelectorAll("section.grp").forEach(sec=>{
-    const gOK = filterGroup==="all" || sec.dataset.group===filterGroup;
+    const gOK = filterGroup==="all" || filterGroup==="rec" || sec.dataset.group===filterGroup;
     let shown=0;
     sec.querySelectorAll(".track").forEach(el=>{
-      const ok = gOK && (!q || el.dataset.title.includes(q));
-      el.classList.toggle("hidden",!ok); if(ok)shown++;
+      const t=TRACKS[+el.dataset.n-1];
+      let ok = gOK && (filterGroup!=="rec" || t.rec), hit="";
+      if(ok && q && !el.dataset.title.includes(q)){
+        hit = deep ? lyricHit(t.stem,q) : "";
+        ok = !!hit;
+      }
+      el.querySelector(".hit").innerHTML = hit;
+      el.classList.toggle("lyrhit", !!hit);
+      el.classList.toggle("hidden",!ok); if(ok){shown++;total++;}
     });
     sec.classList.toggle("hidden", shown===0);
+    const n=sec.querySelector("h2 .n"), tot=+n.dataset.tot;   // "43" is a lie while 2 are showing
+    n.textContent = n.dataset.note+" · "+(shown<tot ? shown+" of "+tot : tot);
   });
+  const nh=$("noHits");
+  nh.classList.toggle("hidden", total>0);
+  if(!total) nh.textContent = q
+    ? "Nothing called " + raw + " — not a song, not a lord, not a line in any of them."
+    : "Nothing in this filter.";
+  hlQuery = deep ? q : "";        // keep the drawer's highlighting in step with the box
+  if(lyOpen) paintLyrics();
 }
 $("q").addEventListener("input", applyFilter);
 document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{
   filterGroup=c.dataset.f;
-  document.querySelectorAll(".chip").forEach(x=>x.style.borderColor="");
-  c.style.borderColor="rgba(255,140,60,.7)"; applyFilter();
+  document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("on", x===c));
+  applyFilter();
 }));
 
 // ---- background: a living war-camp night (drifting embers + wandering glow) --
