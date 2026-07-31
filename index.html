@@ -35,6 +35,23 @@
   .sub{color:var(--muted);font-size:15px;max-width:640px;margin:10px auto 0;line-height:1.5}
   .count{color:var(--gold);font-weight:700}
 
+  /* the front door: one press picks the starred few and shuffles them */
+  .cta{margin:18px auto 0;display:inline-flex;align-items:center;gap:9px;cursor:pointer;
+    font-family:inherit;font-size:15px;color:var(--ink);padding:12px 22px;border-radius:999px;
+    border:1px solid rgba(255,140,60,.55);
+    background:radial-gradient(130% 170% at 50% 0%,rgba(255,150,70,.3),rgba(255,140,60,.07));
+    box-shadow:0 6px 24px rgba(255,120,44,.16);transition:.15s;
+    animation:beckon 3.4s ease-in-out infinite}
+  .cta:hover{border-color:rgba(255,175,95,.9);color:#fff;
+    background:radial-gradient(130% 170% at 50% 0%,rgba(255,165,85,.42),rgba(255,140,60,.12))}
+  .cta:active{transform:scale(.97)}
+  .cta svg.star{color:var(--ember2)}
+  /* it has done its job once something is playing — stop waving */
+  @keyframes beckon{0%,100%{box-shadow:0 6px 24px rgba(255,120,44,.16)}
+                    50%{box-shadow:0 6px 30px rgba(255,140,60,.42)}}
+  body.played .cta,.cta:hover{animation:none}
+  @media (prefers-reduced-motion:reduce){.cta{animation:none}}
+
   /* transport / now playing */
   .player{position:sticky;top:0;z-index:20;margin:22px auto 8px;
     background:linear-gradient(180deg,var(--panel2),var(--panel));
@@ -184,7 +201,8 @@
     <h1>Warlords <span class="amp">Jukebox</span></h1>
     <p class="sub">Every track that ships in the game, in one place — <span class="count" id="totCount">—</span> songs.
        Hit a name to play, or set it loose with <b>Play all</b> / <b>Shuffle</b> and let the war-camp radio run.
-       Open <b>Lyrics</b> to read along with whatever's on. Short on time? Start with the starred ones.</p>
+       Open <b>Lyrics</b> to read along with whatever's on.</p>
+    <button class="cta" id="startRec">New here? Shuffle the starred picks</button>
   </header>
 
   <div class="player" id="player">
@@ -414,6 +432,7 @@ GROUPS.forEach(g=>g.stems.forEach(s=>{
 TRACKS.forEach((t,i)=>t.n=i+1);
 document.getElementById("totCount").textContent = TRACKS.length;
 document.getElementById("recChip").insertAdjacentHTML("afterbegin", STAR);
+document.getElementById("startRec").insertAdjacentHTML("afterbegin", STAR);
 
 // ---- render list ------------------------------------------------------------
 const listEl = document.getElementById("list");
@@ -468,23 +487,35 @@ function playIndex(i){
 function togglePlay(){ if(cur<0){ playIndex(order[0]); return; }
   if(audio.paused) audio.play().catch(()=>{}); else audio.pause(); }
 function step(d){ if(cur<0){ playIndex(order[0]); return; }
-  let k=order.indexOf(cur); k=(k+d+order.length)%order.length; playIndex(order[k]); }
+  let k=order.indexOf(cur);
+  // playing something the filter has since hidden — step back onto the queue, don't wrap oddly
+  if(k<0){ playIndex(order[d>0?0:order.length-1]); return; }
+  k=(k+d+order.length)%order.length; playIndex(order[k]); }
 
-// Play all / Shuffle run whatever the list is showing — filter to Recommended, hit All, and
-// that's the eight you get. With no filter on, it's still the whole 73 in order.
-function queue(){
+// The queue IS whatever the list is showing. Filter to Recommended and the whole transport —
+// play, next/prev, and the auto-advance when a track ends — stays inside those eight; clear
+// the filter and it's the full 73 again. Rebuilt whenever the visible set changes, so it
+// doesn't matter whether you got here by pressing All or just by clicking a track.
+const shuffled = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));
+  [a[i],a[j]]=[a[j],a[i]]; } return a; };
+let qKey="";
+function syncQueue(force){
   const v=TRACKS.map((_,i)=>i).filter(i=>{ const el=trackEls[TRACKS[i].n];
     return el && !el.classList.contains("hidden") && !el.closest("section.grp").classList.contains("hidden"); });
-  return v.length ? v : TRACKS.map((_,i)=>i);
+  const key=v.join(",");
+  if(!force && key===qKey) return;      // same set — never re-roll a shuffle out from under a listener
+  qKey=key;
+  order = v.length ? v : TRACKS.map((_,i)=>i);
+  if(shuffle) shuffled(order);
 }
 $("play").onclick=togglePlay; $("next").onclick=()=>step(1); $("prev").onclick=()=>step(-1);
-$("all").onclick=()=>{ shuffle=false; $("shuf").classList.remove("on"); order=queue(); playIndex(order[0]); };
+$("all").onclick=()=>{ shuffle=false; $("shuf").classList.remove("on");
+  syncQueue(true); playIndex(order[0]); };
 $("shuf").onclick=()=>{ shuffle=!shuffle; $("shuf").classList.toggle("on",shuffle);
-  order=queue();
-  if(shuffle){ for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
-    playIndex(order[0]); } };
+  syncQueue(true); if(shuffle) playIndex(order[0]); };
 
 audio.addEventListener("play", ()=>{ $("play").textContent="⏸";
+  document.body.classList.add("played");        // the front-door button can stop beckoning now
   if(cur>=0&&trackEls[TRACKS[cur].n]) trackEls[TRACKS[cur].n].classList.remove("paused"); bg.warm=1; });
 audio.addEventListener("pause", ()=>{ $("play").textContent="▶";
   if(cur>=0&&trackEls[TRACKS[cur].n]) trackEls[TRACKS[cur].n].classList.add("paused"); });
@@ -634,13 +665,25 @@ function applyFilter(){
     : "Nothing in this filter.";
   hlQuery = deep ? q : "";        // keep the drawer's highlighting in step with the box
   if(lyOpen) paintLyrics();
+  syncQueue();                    // what you can see is what will play
 }
 $("q").addEventListener("input", applyFilter);
-document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{
-  filterGroup=c.dataset.f;
-  document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("on", x===c));
+function pickChip(f){
+  filterGroup=f;
+  document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("on", x.dataset.f===f));
   applyFilter();
-}));
+}
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>pickChip(c.dataset.f)));
+
+// The front door for anyone who has never heard a note of this: the starred few, shuffled,
+// playing. Press it twice and you get a different order.
+$("startRec").onclick=()=>{
+  $("q").value="";
+  pickChip("rec");
+  shuffle=true; $("shuf").classList.add("on");
+  syncQueue(true);
+  playIndex(order[0]);
+};
 
 // ---- background: a living war-camp night (drifting embers + wandering glow) --
 const bgc=$("bg"), ctx=bgc.getContext("2d");
