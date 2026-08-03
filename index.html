@@ -177,8 +177,25 @@
   @keyframes eq{0%,100%{height:4px}50%{height:15px}}
 
   .hidden{display:none!important}
+
+  /* the way out to the game. This page is the most shared thing the project owns
+     and for its first month it pointed nowhere, so the links sit above the fold. */
+  .gamelinks{margin:20px auto 0;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+  .gamelinks a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+    font-family:inherit;font-size:14px;color:var(--ink);padding:10px 18px;border-radius:999px;
+    border:1px solid var(--line);background:var(--panel);
+    transition:border-color .18s,background .18s,transform .18s}
+  .gamelinks a:hover{border-color:rgba(235,195,94,.5);background:var(--panel2);transform:translateY(-1px)}
+  .gamelinks a b{color:var(--ember2);font-weight:600}
+  .gamelinks a.primary{border-color:rgba(255,122,44,.55);
+    box-shadow:0 0 22px rgba(255,122,44,.16) inset}
+  .gamelinks .note{flex-basis:100%;text-align:center;color:var(--muted);font-size:12.5px;margin-top:2px}
+  @media (max-width:560px){.gamelinks a{font-size:13px;padding:9px 14px}}
+
   footer{margin:56px 2px 0;color:var(--muted);font-size:12.5px;line-height:1.6;text-align:center;opacity:.8}
   footer code{background:rgba(255,255,255,.06);padding:1px 6px;border-radius:5px;color:var(--ember2);font-size:12px}
+  footer a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--ember2);border-bottom-color:rgba(255,214,107,.6)}
 
   /* walking easter-egg rig */
   #walker{position:fixed;bottom:8px;left:0;z-index:5;pointer-events:none;
@@ -203,6 +220,16 @@
        Hit a name to play, or set it loose with <b>Play all</b> / <b>Shuffle</b> and let the war-camp radio run.
        Open <b>Lyrics</b> to read along with whatever's on.</p>
     <button class="cta" id="startRec">New here? Shuffle the starred picks</button>
+
+    <nav class="gamelinks">
+      <a class="primary" href="https://thepaulbooth.itch.io/warlords" target="_blank" rel="noopener">
+        <b>Play the game free</b> in your browser</a>
+      <a href="https://store.steampowered.com/app/4937370/" target="_blank" rel="noopener">
+        <b>Wishlist on Steam</b></a>
+      <a href="https://store.steampowered.com/app/4998870/" target="_blank" rel="noopener">
+        <b>Soundtrack on Steam</b></a>
+      <span class="note">These are the songs from Warlords, a roguelite deckbuilder where every card is an army.</span>
+    </nav>
   </header>
 
   <div class="player" id="player">
@@ -249,7 +276,12 @@
   <p class="nohits hidden" id="noHits"></p>
 
   <footer>
-    Streams the shipped <code>assets/music/*.ogg</code> straight off the build — served alongside this page.
+    All 73 tracks are from <a href="https://store.steampowered.com/app/4937370/" target="_blank" rel="noopener">Warlords: Deckbuilding Autobattler</a>.
+    <a href="https://thepaulbooth.itch.io/warlords" target="_blank" rel="noopener">Play Act 1 free in your browser</a>,
+    <a href="https://store.steampowered.com/app/4937370/" target="_blank" rel="noopener">wishlist the full game</a>, or
+    <a href="https://store.steampowered.com/app/4998870/" target="_blank" rel="noopener">get the soundtrack</a>.
+    Made by <a href="https://pbandgames.com" target="_blank" rel="noopener">PB&amp; Games</a>.
+    <br>Streams the shipped <code>assets/music/*.ogg</code> straight off the build — served alongside this page.
     <br>If a track shows a ✕, the <code>assets/</code> folder isn't sitting next to this file where it's hosted.
   </footer>
 </div>
