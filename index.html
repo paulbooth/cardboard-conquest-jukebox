@@ -3,203 +3,281 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Warlords — Full Jukebox</title>
-<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<title>Cardboard Conquest — Full Jukebox</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
 <style>
+  /* CARDBOARD CUT, 2026-08-27. This page was Sable & Gold: lacquer in a dark room,
+     ember orange on near-black, a war-camp night with sparks drifting up the screen.
+     The game stopped being that object at the papercraft merge, and the page did not
+     follow. So it makes the same inversion the store pages already made -- the working,
+     the sampled sources and the measured contrast are in marketing/itch/THEME_CARDBOARD.md:
+     A PIECE OF CARD ON A LIT DESK, WITH DARK INK ON IT.
+
+     Every colour below is a scripts/ui/ui_kit.gd constant converted to sRGB, not a colour
+     chosen to sit near one. The mat is what the game draws behind every meta screen; the
+     sheet is what it prints every readable surface on. */
   :root{
-    --bg0:#07060d; --bg1:#120a14; --ink:#f3e9d6; --muted:#a99c86;
-    --ember:#ff7a2c; --ember2:#ffd66b; --gold:#ebc35e; --line:rgba(235,195,94,.18);
-    --panel:rgba(20,15,24,.62); --panel2:rgba(30,22,34,.72);
+    --mat:#26413c;        /* UIKit.cutting_mat() base -- the self-healing vinyl */
+    --card:#e2d7c0;       /* UIKit.KRAFT_PANEL -- card stock, face up */
+    --card-hi:#ece2ce;    /* the lit edge of the same stock */
+    --card-lo:#d3c6ab;    /* the same stock in the sheet's own shadow */
+    --ink:#201913;        /* UIKit.KRAFT_TEXT -- warm near-black. 12.2:1 on card */
+    --ink-soft:#6b5c48;   /* the same ink, thinned: captions and counts */
+    --stamp:#a83422;      /* UIKit.KRAFT_ACCENT -- the stamp pad. 4.6:1 on card */
+    --crimson:#8f2b21;    /* UIKit.CRIMSON -- banner cloth. White on it is 8.3:1 */
+    --crimson-lo:#6d1f18; /* the same cloth in shadow: every pressed edge */
+    --link:#1d5f8f;       /* UIKit.REF_LINK_COL_VELLUM -- a link printed on cream */
+    --rule:rgba(32,25,19,.16);
   }
   *{box-sizing:border-box}
   html,body{margin:0;height:100%}
   body{
-    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
-    color:var(--ink); background:var(--bg0); overflow-x:hidden;
-    min-height:100%;
+    /* Cinzel is retired from the game's interface -- display_font() returns the body face
+       emboldened -- so the page follows. A humanist sans reads as printed stock; a serif
+       here would be the old voice wearing the new palette. */
+    font-family:"Lato","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    color:var(--ink); background:var(--mat); overflow-x:hidden; min-height:100%;
   }
   #bg{position:fixed;inset:0;width:100%;height:100%;z-index:-2;display:block}
-  /* deep vignette + warm floor glow over the canvas */
+  /* The lamp hangs at the upper right, the way it does over the board (Battlefield.LAMP_X),
+     so the desk falls off into shade at the lower left. */
   body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
-    background:radial-gradient(120% 80% at 50% 118%, rgba(255,120,44,.20), transparent 55%),
-               radial-gradient(140% 120% at 50% 0%, transparent 60%, rgba(0,0,0,.6));}
+    background:radial-gradient(115% 90% at 80% -12%, rgba(255,228,178,.26), transparent 60%),
+               radial-gradient(150% 130% at 20% 115%, rgba(0,0,0,.42), transparent 62%)}
 
-  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 220px}
+  .wrap{max-width:1080px;margin:0 auto;padding:34px 20px 220px}
 
-  header.hero{padding:54px 6px 20px;text-align:center;position:relative}
-  .crest{font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);opacity:.85}
-  h1{margin:.18em 0 .05em;font-size:clamp(32px,6vw,58px);font-weight:700;
-     letter-spacing:.01em;line-height:1;
-     text-shadow:0 2px 0 #000,0 0 34px rgba(255,140,60,.35)}
-  h1 .amp{color:var(--ember);font-style:italic}
-  .sub{color:var(--muted);font-size:15px;max-width:640px;margin:10px auto 0;line-height:1.5}
-  .count{color:var(--gold);font-weight:700}
+  /* THE SHEET. One piece of card laid on the mat, holding the whole page. Its edge is the
+     reason the mat reads as a desk rather than as a dark background: something is lying ON
+     it, and casting a shadow onto it. */
+  .sheet{position:relative;max-width:960px;margin:0 auto;background:
+      linear-gradient(180deg,var(--card-hi),var(--card) 22%,var(--card) 78%,var(--card-lo));
+    border-radius:3px;padding:8px 30px 40px;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,
+               0 18px 40px rgba(0,0,0,.36), 0 3px 10px rgba(0,0,0,.28)}
+  /* Paper grain: two fine repeating gradients crossed. Cheap, and it stops a 1080px slab
+     of flat cream from reading as a div. */
+  .sheet::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:3px;
+    opacity:.5;mix-blend-mode:multiply;
+    background:repeating-linear-gradient(90deg,rgba(150,130,100,.05) 0 1px,transparent 1px 3px),
+               repeating-linear-gradient(0deg,rgba(150,130,100,.045) 0 1px,transparent 1px 4px)}
+  @media (max-width:640px){.sheet{padding:6px 16px 30px}}
+  .tape{position:absolute;top:-13px;width:132px;height:30px;pointer-events:none;z-index:3;
+    background:linear-gradient(180deg,rgba(238,224,192,.52),rgba(214,197,160,.46));
+    box-shadow:0 1px 3px rgba(0,0,0,.22);
+    /* torn ends: the short edges are ragged, the long edges are the roll's own cut */
+    clip-path:polygon(0% 12%,4% 0%,8% 16%,13% 3%,100% 6%,97% 22%,100% 88%,95% 100%,
+                      90% 84%,84% 97%,4% 94%,2% 78%,0% 62%)}
+  .tape::after{content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(90deg,rgba(255,255,255,.14) 0 2px,transparent 2px 5px)}
+  .tape.tl{left:-26px;transform:rotate(-4.5deg)}
+  .tape.tr{right:-26px;transform:rotate(3.2deg)}
+  @media (max-width:640px){.tape{width:92px;top:-10px}
+    .tape.tl{left:-16px}.tape.tr{right:-16px}}
+
+
+  header.hero{padding:34px 4px 18px;text-align:center;position:relative}
+  /* Small caps pressed into the stock with a rule either side: the printed header of a
+     track sheet, not a heraldic crest. */
+  .crest{font-size:11.5px;letter-spacing:.34em;text-transform:uppercase;color:var(--stamp);
+    font-weight:700;display:flex;align-items:center;gap:14px;justify-content:center}
+  .crest::before,.crest::after{content:"";height:1px;width:min(90px,12vw);background:var(--rule)}
+  h1{margin:.22em 0 .05em;font-size:clamp(30px,5.6vw,54px);font-weight:800;
+     letter-spacing:-.015em;line-height:1.02;color:var(--ink)}
+  /* The accent word is stamped, not glowing: red oxide pressed into card, landing a
+     degree off square the way a hand stamp does. */
+  h1 .amp{color:var(--stamp);font-style:normal;display:inline-block;transform:rotate(-1.4deg)}
+  .sub{color:var(--ink-soft);font-size:15px;max-width:620px;margin:12px auto 0;line-height:1.55}
+  .sub b{color:var(--ink)}
+  .count{color:var(--stamp);font-weight:800}
 
   /* the front door: one press picks the starred few and shuffles them */
-  .cta{margin:18px auto 0;display:inline-flex;align-items:center;gap:9px;cursor:pointer;
-    font-family:inherit;font-size:15px;color:var(--ink);padding:12px 22px;border-radius:999px;
-    border:1px solid rgba(255,140,60,.55);
-    background:radial-gradient(130% 170% at 50% 0%,rgba(255,150,70,.3),rgba(255,140,60,.07));
-    box-shadow:0 6px 24px rgba(255,120,44,.16);transition:.15s;
+  .cta{margin:20px auto 0;display:inline-flex;align-items:center;gap:9px;cursor:pointer;
+    font-family:inherit;font-size:15px;font-weight:700;color:#fff8ec;padding:12px 24px;
+    border-radius:2px;border:0;background:var(--crimson);
+    box-shadow:0 2px 0 var(--crimson-lo), 0 6px 14px rgba(0,0,0,.28);transition:.13s;
     animation:beckon 3.4s ease-in-out infinite}
-  .cta:hover{border-color:rgba(255,175,95,.9);color:#fff;
-    background:radial-gradient(130% 170% at 50% 0%,rgba(255,165,85,.42),rgba(255,140,60,.12))}
-  .cta:active{transform:scale(.97)}
-  .cta svg.star{color:var(--ember2)}
-  /* it has done its job once something is playing — stop waving */
-  @keyframes beckon{0%,100%{box-shadow:0 6px 24px rgba(255,120,44,.16)}
-                    50%{box-shadow:0 6px 30px rgba(255,140,60,.42)}}
+  .cta:hover{background:#a03227;box-shadow:0 2px 0 var(--crimson-lo), 0 8px 20px rgba(0,0,0,.34)}
+  .cta:active{transform:translateY(2px);box-shadow:0 0 0 var(--crimson-lo), 0 3px 8px rgba(0,0,0,.3)}
+  .cta svg.star{color:#ffd9a8}
+  @keyframes beckon{0%,100%{box-shadow:0 2px 0 #6d1f18,0 6px 14px rgba(0,0,0,.28)}
+                    50%{box-shadow:0 2px 0 #6d1f18,0 9px 24px rgba(0,0,0,.4)}}
   body.played .cta,.cta:hover{animation:none}
   @media (prefers-reduced-motion:reduce){.cta{animation:none}}
 
-  /* transport / now playing */
-  .player{position:sticky;top:0;z-index:20;margin:22px auto 8px;
-    background:linear-gradient(180deg,var(--panel2),var(--panel));
-    border:1px solid var(--line);border-radius:16px;
-    backdrop-filter:blur(9px) saturate(1.1);
-    box-shadow:0 10px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.05)}
-  .player .row{display:flex;align-items:center;gap:14px;padding:12px 16px;flex-wrap:wrap}
+  /* TRANSPORT. A second, smaller card sitting on the sheet -- the one thing you keep
+     coming back to, so it gets its own edge and its own shadow rather than a tint. */
+  .player{position:sticky;top:10px;z-index:20;margin:24px 0 8px;
+    background:linear-gradient(180deg,#efe6d3,#e0d4bb);
+    border:1px solid rgba(32,25,19,.2);border-radius:3px;
+    box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 10px 26px rgba(0,0,0,.26)}
+  .player .row{display:flex;align-items:center;gap:14px;padding:12px 14px;flex-wrap:wrap}
   .btns{display:flex;align-items:center;gap:8px}
-  button.ctl{appearance:none;border:1px solid var(--line);color:var(--ink);
-    background:rgba(255,255,255,.04);border-radius:11px;cursor:pointer;
-    width:44px;height:44px;font-size:17px;display:grid;place-items:center;
-    transition:transform .08s ease,background .15s,border-color .15s}
-  button.ctl:hover{background:rgba(255,140,60,.14);border-color:rgba(255,140,60,.5)}
-  button.ctl:active{transform:scale(.92)}
-  button.ctl.play{width:54px;height:54px;font-size:21px;
-    background:radial-gradient(circle at 50% 35%,rgba(255,150,70,.28),rgba(255,140,60,.08));
-    border-color:rgba(255,140,60,.55)}
-  button.ctl.on{background:rgba(255,140,60,.22);border-color:rgba(255,150,70,.7);color:var(--ember2)}
+  button.ctl{appearance:none;border:1px solid rgba(32,25,19,.24);color:var(--ink);
+    background:linear-gradient(180deg,#f2ead9,#e3d8c0);border-radius:2px;cursor:pointer;
+    width:44px;height:44px;font-size:17px;display:grid;place-items:center;font-family:inherit;
+    box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 2px 3px rgba(0,0,0,.14);
+    transition:transform .08s ease,background .15s,border-color .15s,color .15s}
+  button.ctl:hover{background:linear-gradient(180deg,#fff6e6,#eadfc7);border-color:rgba(32,25,19,.45)}
+  button.ctl:active{transform:translateY(1px);box-shadow:0 1px 2px rgba(0,0,0,.18)}
+  button.ctl.play{width:54px;height:54px;font-size:21px;color:#fff8ec;
+    background:var(--crimson);border-color:var(--crimson-lo);
+    box-shadow:0 2px 0 var(--crimson-lo),0 4px 10px rgba(0,0,0,.26)}
+  button.ctl.play:hover{background:#a03227}
+  button.ctl.on{background:var(--crimson);border-color:var(--crimson-lo);color:#fff8ec;
+    box-shadow:0 2px 0 var(--crimson-lo),0 3px 8px rgba(0,0,0,.24)}
   .np{flex:1;min-width:0}
-  .np .title{font-size:18px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .np .kind{font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);opacity:.8}
-  .np .kind.idle{color:var(--muted)}
-  .seek{display:flex;align-items:center;gap:10px;padding:0 18px 14px}
-  .time{font-variant-numeric:tabular-nums;font-size:12px;color:var(--muted);min-width:42px;text-align:center}
-  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;flex:1;border-radius:6px;
-    background:linear-gradient(90deg,var(--ember) 0%,var(--ember2) var(--p,0%),rgba(255,255,255,.12) var(--p,0%));
-    cursor:pointer;outline:none}
+  .np .title{font-size:18px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .np .kind{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--stamp);font-weight:700}
+  .np .kind.idle{color:var(--ink-soft)}
+  .seek{display:flex;align-items:center;gap:10px;padding:0 16px 14px}
+  .time{font-variant-numeric:tabular-nums;font-size:12px;color:var(--ink-soft);min-width:42px;text-align:center}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;flex:1;border-radius:0;
+    background:linear-gradient(90deg,var(--crimson) 0%,var(--stamp) var(--p,0%),rgba(32,25,19,.16) var(--p,0%));
+    cursor:pointer;outline:none;box-shadow:0 1px 0 rgba(255,255,255,.5)}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;
-    background:var(--ember2);box-shadow:0 0 10px rgba(255,180,90,.9);border:2px solid #3a1e08;cursor:pointer}
-  input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--ember2);
-    border:2px solid #3a1e08;cursor:pointer}
+    background:var(--crimson);border:2px solid #f0e7d5;box-shadow:0 1px 4px rgba(0,0,0,.4);cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--crimson);
+    border:2px solid #f0e7d5;box-shadow:0 1px 4px rgba(0,0,0,.4);cursor:pointer}
 
-  /* lyrics drawer — lives inside the sticky player so it stays put while you browse */
-  .ctl.wide{width:auto;padding:0 14px;font-size:13px;letter-spacing:.04em;gap:8px;
+  /* lyrics drawer -- lives inside the sticky player so it stays put while you browse.
+     Printed on a paler leaf tucked under the transport. */
+  .ctl.wide{width:auto;padding:0 14px;font-size:13px;font-weight:700;letter-spacing:.03em;gap:8px;
     display:flex;align-items:center;white-space:nowrap}
   .caret{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;
     border-top:6px solid currentColor;opacity:.75;transition:transform .2s}
   .ctl.on .caret{transform:rotate(180deg)}
   .lyrics{position:relative;max-height:0;overflow:hidden;transition:max-height .28s ease;
-    border-top:1px solid transparent;border-radius:0 0 16px 16px;
-    background:linear-gradient(180deg,rgba(9,6,12,.74),rgba(9,6,12,.9))}
-  .lyrics.open{max-height:min(48vh,460px);border-top-color:var(--line)}
-  /* the list scrolling past underneath is distracting mid-verse, and the cut-off
-     bottom line needs to read as "there is more" */
+    border-top:1px solid transparent;background:linear-gradient(180deg,#f4ecdc,#eae0c9)}
+  .lyrics.open{max-height:min(48vh,460px);border-top-color:var(--rule)}
+  /* the list scrolling past underneath is distracting mid-verse, and the cut-off bottom
+     line needs to read as "there is more" */
   .lyrics::after{content:"";position:absolute;left:0;right:0;bottom:0;height:44px;
-    pointer-events:none;border-radius:0 0 16px 16px;
-    background:linear-gradient(180deg,transparent,rgba(9,6,12,.96))}
+    pointer-events:none;background:linear-gradient(180deg,rgba(234,224,201,0),#eae0c9)}
   .lyrics .inner{max-height:min(48vh,460px);overflow-y:auto;overscroll-behavior:contain;
-    padding:14px 20px 34px;scrollbar-width:thin;scrollbar-color:rgba(255,140,60,.5) transparent}
+    padding:14px 20px 34px;scrollbar-width:thin;scrollbar-color:rgba(143,43,33,.55) transparent}
   .lyrics .inner::-webkit-scrollbar{width:9px}
-  .lyrics .inner::-webkit-scrollbar-thumb{background:rgba(255,140,60,.42);border-radius:9px;
+  .lyrics .inner::-webkit-scrollbar-thumb{background:rgba(143,43,33,.45);border-radius:9px;
     border:3px solid transparent;background-clip:padding-box}
   .lyric{font-size:15.5px;line-height:1.62;white-space:pre-wrap;max-width:56ch;margin:0 auto;
-    text-align:center;color:#ece2cf}
-  .lyric .sec{display:block;margin:22px 0 8px;font-size:11px;letter-spacing:.26em;
-    text-transform:uppercase;color:var(--gold);font-weight:700}
+    text-align:center;color:var(--ink)}
+  .lyric .sec{display:block;margin:22px 0 8px;font-size:11px;letter-spacing:.24em;
+    text-transform:uppercase;color:var(--stamp);font-weight:800}
   .lyric .sec:first-child{margin-top:0}
   .lyric .sec i{display:block;margin-top:3px;font-size:11.5px;letter-spacing:.02em;
-    text-transform:none;font-weight:400;color:var(--muted);opacity:.85}
-  /* a speaker tag opening a sung line — the duets mark every line this way */
-  .lyric .who{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;
-    color:var(--gold);opacity:.8;margin-right:9px;white-space:nowrap}
+    text-transform:none;font-weight:400;color:var(--ink-soft)}
+  /* a speaker tag opening a sung line -- the duets mark every line this way */
+  .lyric .who{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;
+    color:var(--stamp);margin-right:9px;white-space:nowrap}
   .lyric .who i{font-size:11px;letter-spacing:.02em;text-transform:none;font-weight:400;
-    color:var(--muted);margin-left:5px}
-  .lyric .empty{color:var(--muted);font-style:italic}
+    color:var(--ink-soft);margin-left:5px}
+  .lyric .empty{color:var(--ink-soft);font-style:italic}
 
-  .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 2px 6px}
+  .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:22px 0 6px}
   .search{flex:1;min-width:200px;position:relative}
-  .search input{width:100%;padding:12px 14px 12px 40px;border-radius:12px;
-    background:rgba(0,0,0,.32);border:1px solid var(--line);color:var(--ink);font-size:15px;
-    font-family:inherit}
-  .search input::placeholder{color:var(--muted)}
-  .search .mag{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:.55}
-  .chip{padding:9px 14px;border-radius:999px;border:1px solid var(--line);color:var(--muted);
-    background:rgba(255,255,255,.03);cursor:pointer;font-size:13px;letter-spacing:.02em;
-    transition:.15s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
-  .chip:hover{color:var(--ink);border-color:rgba(255,140,60,.5)}
-  .chip.on{color:var(--ink);border-color:rgba(255,140,60,.7);background:rgba(255,140,60,.13)}
-  .chip.on svg.star{color:var(--ember2)}
-  /* drawn, not a glyph — a ★ renders as a blue emoji on some Macs */
+  /* Pressed INTO the card rather than raised off it: an inset shadow is what says "write
+     here" on a surface with no dark for a glow to sit against. */
+  .search input{width:100%;padding:12px 14px 12px 40px;border-radius:2px;
+    background:#f2ead9;border:1px solid rgba(32,25,19,.24);color:var(--ink);font-size:15px;
+    font-family:inherit;box-shadow:inset 0 2px 4px rgba(32,25,19,.14)}
+  .search input:focus{outline:none;border-color:var(--crimson);
+    box-shadow:inset 0 2px 4px rgba(32,25,19,.14),0 0 0 3px rgba(143,43,33,.16)}
+  .search input::placeholder{color:var(--ink-soft);opacity:.8}
+  .search .mag{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.55}
+  .chip{padding:9px 15px;border-radius:2px;border:1px solid rgba(32,25,19,.26);color:var(--ink);
+    background:linear-gradient(180deg,#efe6d3,#e2d7bf);cursor:pointer;font-size:13px;
+    font-weight:700;letter-spacing:.02em;transition:.14s;font-family:inherit;
+    display:inline-flex;align-items:center;gap:6px;
+    box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 2px 3px rgba(0,0,0,.12)}
+  .chip:hover{border-color:rgba(32,25,19,.5);background:linear-gradient(180deg,#fff6e6,#eadfc7)}
+  .chip.on{color:#fff8ec;background:var(--crimson);border-color:var(--crimson-lo);
+    box-shadow:0 2px 0 var(--crimson-lo),0 3px 7px rgba(0,0,0,.22)}
+  .chip.on svg.star{color:#ffd9a8}
+  /* drawn, not a glyph -- a star character renders as a blue emoji on some Macs */
   svg.star{fill:currentColor;flex:none}
-  .nohits{margin:34px 2px;color:var(--muted);font-size:14px;text-align:center;line-height:1.6}
+  .nohits{margin:34px 2px;color:var(--ink-soft);font-size:14px;text-align:center;line-height:1.6}
 
   section.grp{margin:34px 0 0}
-  .grp h2{display:flex;align-items:baseline;gap:12px;margin:0 2px 14px;font-size:15px;
-    letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:700}
-  .grp h2 .n{font-size:12px;color:var(--muted);letter-spacing:.1em;font-weight:400}
-  .grp h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:10px}
+  .grp h2{display:flex;align-items:baseline;gap:12px;margin:0 2px 14px;font-size:14px;
+    letter-spacing:.24em;text-transform:uppercase;color:var(--stamp);font-weight:800}
+  .grp h2 .n{font-size:12px;color:var(--ink-soft);letter-spacing:.1em;font-weight:400}
+  .grp h2::after{content:"";flex:1;height:1px;background:var(--rule)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:8px}
 
-  .track{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;
-    background:rgba(255,255,255,.028);border:1px solid transparent;cursor:pointer;
-    text-align:left;color:inherit;font-family:inherit;transition:.13s;
+  /* A TRACK IS A PUNCHED CHIP: raised off the sheet, and it presses down when you take
+     it -- the same physical grammar every button in the game uses. */
+  .track{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:2px;
+    background:linear-gradient(180deg,#eee5d2,#e1d6be);border:1px solid rgba(32,25,19,.14);
+    cursor:pointer;text-align:left;color:inherit;font-family:inherit;transition:.13s;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 2px 3px rgba(0,0,0,.1);
     scroll-margin-top:calc(var(--stick,120px) + 14px)}
-  .track:hover{background:rgba(255,140,60,.09);border-color:rgba(255,140,60,.28)}
-  .track.playing{background:linear-gradient(90deg,rgba(255,140,60,.22),rgba(255,140,60,.05));
-    border-color:rgba(255,150,70,.6);box-shadow:0 0 24px rgba(255,120,44,.15)}
-  .track .disc{width:34px;height:34px;border-radius:9px;flex:none;display:grid;place-items:center;
-    background:radial-gradient(circle at 40% 35%,#2a2030,#14101a);border:1px solid var(--line);
-    font-size:14px;color:var(--gold)}
-  .track.playing .disc{color:var(--ember2);border-color:rgba(255,150,70,.6)}
+  .track:hover{border-color:rgba(32,25,19,.42);background:linear-gradient(180deg,#fdf4e2,#ece1c9);
+    box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 4px 8px rgba(0,0,0,.16)}
+  /* Playing = the crimson banner, which is how the game marks the live thing: white
+     lettering on cloth, never a glow. */
+  .track.playing{background:var(--crimson);border-color:var(--crimson-lo);color:#fff8ec;
+    box-shadow:0 2px 0 var(--crimson-lo),0 4px 12px rgba(0,0,0,.26)}
+  .track .disc{width:34px;height:34px;border-radius:2px;flex:none;display:grid;place-items:center;
+    background:linear-gradient(180deg,#d8cbb0,#c9bb9c);border:1px solid rgba(32,25,19,.22);
+    font-size:14px;color:var(--stamp)}
+  .track.playing .disc{color:var(--crimson);background:#f4ecdc;border-color:var(--crimson-lo)}
   .track .meta{min-width:0;flex:1}
-  .track .tt{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
-  .track .num{font-size:11px;color:var(--muted);letter-spacing:.06em}
-  .track.playing .num{color:var(--ember2)}
-  /* a pick of the litter — gold star pinned to the right of the row */
-  .track .rec{flex:none;color:var(--gold);opacity:.85;display:grid;place-items:center;
-    filter:drop-shadow(0 0 7px rgba(255,180,90,.4))}
-  .track.playing .rec{color:var(--ember2);opacity:1}
+  .track .tt{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+  .track .num{font-size:11px;color:var(--ink-soft);letter-spacing:.06em}
+  .track.playing .num{color:rgba(255,248,236,.82)}
+  /* a pick of the litter -- a stamped star pinned to the right of the row */
+  .track .rec{flex:none;color:var(--stamp);opacity:.9;display:grid;place-items:center}
+  .track.playing .rec{color:#ffd9a8;opacity:1}
   /* the lyric line that matched the search, shown only while it's the reason you see this row */
-  .track .hit{display:none;font-size:11.5px;line-height:1.5;color:var(--muted);margin-top:3px}
+  .track .hit{display:none;font-size:11.5px;line-height:1.5;color:var(--ink-soft);margin-top:3px}
+  .track.playing .hit{color:rgba(255,248,236,.85)}
   .track.lyrhit .hit{display:block}
   /* the quote gets one line and an ellipsis; the counter keeps its own so it never gets cut */
   .track .hit .q{display:block;font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .track .hit .more{display:block;color:var(--gold);opacity:.7;font-size:11px}
-  mark{background:rgba(255,140,60,.3);color:var(--ember2);border-radius:3px;padding:0 2px}
-  .lyric mark{background:rgba(255,140,60,.22);color:#ffe2b0}
+  .track .hit .more{display:block;color:var(--stamp);font-size:11px}
+  .track.playing .hit .more{color:#ffd9a8}
+  /* A highlighter drawn over print, which is what a search hit is on paper. */
+  mark{background:rgba(235,180,60,.55);color:var(--ink);border-radius:2px;padding:0 2px}
+  .track.playing mark{background:rgba(255,216,150,.9);color:#3a1109}
+  .lyric mark{background:rgba(235,180,60,.5);color:var(--ink)}
   .eq{display:none;gap:2px;align-items:flex-end;height:15px}
   .track.playing .eq{display:flex}
-  .eq i{width:3px;background:var(--ember2);border-radius:2px;animation:eq .9s ease-in-out infinite}
+  .eq i{width:3px;background:#ffd9a8;border-radius:1px;animation:eq .9s ease-in-out infinite}
   .eq i:nth-child(2){animation-delay:.15s}.eq i:nth-child(3){animation-delay:.3s}
   .track.paused .eq i{animation-play-state:paused;opacity:.5}
   @keyframes eq{0%,100%{height:4px}50%{height:15px}}
 
   .hidden{display:none!important}
 
-  /* the way out to the game. This page is the most shared thing the project owns
-     and for its first month it pointed nowhere, so the links sit above the fold. */
-  .gamelinks{margin:20px auto 0;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+  /* the way out to the game. This page is the most shared thing the project owns and for
+     its first month it pointed nowhere, so the links sit above the fold. */
+  .gamelinks{margin:22px auto 0;display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
   .gamelinks a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;
-    font-family:inherit;font-size:14px;color:var(--ink);padding:10px 18px;border-radius:999px;
-    border:1px solid var(--line);background:var(--panel);
-    transition:border-color .18s,background .18s,transform .18s}
-  .gamelinks a:hover{border-color:rgba(235,195,94,.5);background:var(--panel2);transform:translateY(-1px)}
-  .gamelinks a b{color:var(--ember2);font-weight:600}
-  .gamelinks a.primary{border-color:rgba(255,122,44,.55);
-    box-shadow:0 0 22px rgba(255,122,44,.16) inset}
-  .gamelinks .note{flex-basis:100%;text-align:center;color:var(--muted);font-size:12.5px;margin-top:2px}
+    font-family:inherit;font-size:14px;color:var(--ink);padding:10px 18px;border-radius:2px;
+    border:1px solid rgba(32,25,19,.26);background:linear-gradient(180deg,#efe6d3,#e2d7bf);
+    box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 2px 3px rgba(0,0,0,.12);
+    transition:border-color .18s,background .18s,transform .18s,box-shadow .18s}
+  .gamelinks a:hover{border-color:rgba(32,25,19,.5);transform:translateY(-1px);
+    background:linear-gradient(180deg,#fff6e6,#eadfc7);
+    box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 5px 10px rgba(0,0,0,.18)}
+  .gamelinks a b{color:var(--stamp);font-weight:800}
+  .gamelinks a.primary{color:#fff8ec;background:var(--crimson);border-color:var(--crimson-lo);
+    box-shadow:0 2px 0 var(--crimson-lo),0 4px 10px rgba(0,0,0,.24)}
+  .gamelinks a.primary b{color:#fff8ec}
+  .gamelinks a.primary:hover{background:#a03227}
+  .gamelinks .note{flex-basis:100%;text-align:center;color:var(--ink-soft);font-size:12.5px;margin-top:4px}
   @media (max-width:560px){.gamelinks a{font-size:13px;padding:9px 14px}}
 
-  footer{margin:56px 2px 0;color:var(--muted);font-size:12.5px;line-height:1.6;text-align:center;opacity:.8}
-  footer code{background:rgba(255,255,255,.06);padding:1px 6px;border-radius:5px;color:var(--ember2);font-size:12px}
-  footer a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--line)}
-  footer a:hover{color:var(--ember2);border-bottom-color:rgba(255,214,107,.6)}
+  footer{margin:52px 2px 0;padding-top:22px;border-top:1px solid var(--rule);
+    color:var(--ink-soft);font-size:12.5px;line-height:1.7;text-align:center}
+  footer code{background:rgba(32,25,19,.08);padding:1px 6px;border-radius:2px;
+    color:var(--ink);font-size:12px}
+  footer a{color:var(--link);text-decoration:none;border-bottom:1px solid rgba(29,95,143,.35)}
+  footer a:hover{color:var(--crimson);border-bottom-color:rgba(143,43,33,.5)}
 
   /* walking easter-egg rig */
   #walker{position:fixed;bottom:8px;left:0;z-index:5;pointer-events:none;
-    width:96px;height:96px;filter:drop-shadow(0 8px 6px rgba(0,0,0,.55));
+    width:96px;height:96px;filter:drop-shadow(0 8px 6px rgba(0,0,0,.5));
     opacity:0;transition:opacity .6s}
   #walker img{width:100%;height:100%;display:block}
   @media (max-width:560px){#walker{width:70px;height:70px}}
@@ -213,22 +291,24 @@
 <canvas id="bg"></canvas>
 
 <div class="wrap">
+ <div class="sheet">
+  <i class="tape tl"></i><i class="tape tr"></i>
   <header class="hero">
-    <div class="crest">War-Camp Wireless · the complete soundtrack</div>
-    <h1>Warlords <span class="amp">Jukebox</span></h1>
+    <div class="crest">The complete soundtrack · pressed on card</div>
+    <h1>Cardboard Conquest <span class="amp">Jukebox</span></h1>
     <p class="sub">Every track that ships in the game, in one place — <span class="count" id="totCount">—</span> songs.
-       Hit a name to play, or set it loose with <b>Play all</b> / <b>Shuffle</b> and let the war-camp radio run.
+       Hit a name to play, or set it loose with <b>Play all</b> / <b>Shuffle</b> and let the deck run.
        Open <b>Lyrics</b> to read along with whatever's on.</p>
     <button class="cta" id="startRec">New here? Shuffle the starred picks</button>
 
     <nav class="gamelinks">
-      <a class="primary" href="https://thepaulbooth.itch.io/warlords" target="_blank" rel="noopener">
+      <a class="primary" href="https://thepaulbooth.itch.io/cardboard-conquest" target="_blank" rel="noopener">
         <b>Play the game free</b> in your browser</a>
       <a href="https://store.steampowered.com/app/4937370/" target="_blank" rel="noopener">
         <b>Wishlist on Steam</b></a>
       <a href="https://store.steampowered.com/app/4998870/" target="_blank" rel="noopener">
         <b>Soundtrack on Steam</b></a>
-      <span class="note">These are the songs from Warlords, a roguelite deckbuilder where every card is an army.</span>
+      <span class="note">These are the songs from Cardboard Conquest, a roguelite deckbuilder where every card is an army.</span>
     </nav>
   </header>
 
@@ -247,7 +327,7 @@
         <button class="ctl wide" id="lyr" title="Show the words to the playing track (L)"
                 aria-expanded="false" aria-controls="lyrics">Lyrics <span class="caret"></span></button>
         <button class="ctl wide" id="all" title="Play all in order">▶ All</button>
-        <button class="ctl wide" id="shuf" title="Shuffle">🔀 Shuffle</button>
+        <button class="ctl wide" id="shuf" title="Shuffle"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1.4 4h2.6l3 4M9.2 12h2.9M1.4 12h2.6l6.1-8h1.8"/><path d="M11.6 2.2 13.9 4l-2.3 1.8M11.6 10.2l2.3 1.8-2.3 1.8"/></svg> Shuffle</button>
       </div>
     </div>
     <div class="seek">
@@ -262,7 +342,7 @@
 
   <div class="toolbar">
     <div class="search">
-      <span class="mag">🔍</span>
+      <span class="mag"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="6.8" cy="6.8" r="4.6"/><path d="M10.3 10.3 14 14"/></svg></span>
       <input id="q" type="text" placeholder="Search songs, lords, or lyrics… (e.g. brother clang, back to back)">
     </div>
     <button class="chip on" data-f="all">All</button>
@@ -276,14 +356,15 @@
   <p class="nohits hidden" id="noHits"></p>
 
   <footer>
-    All 73 tracks are from <a href="https://store.steampowered.com/app/4937370/" target="_blank" rel="noopener">Warlords: Deckbuilding Autobattler</a>.
-    <a href="https://thepaulbooth.itch.io/warlords" target="_blank" rel="noopener">Play Act 1 free in your browser</a>,
+    All 73 tracks are from <a href="https://store.steampowered.com/app/4937370/" target="_blank" rel="noopener">Cardboard Conquest: Deckbuilding Autobattler</a>.
+    <a href="https://thepaulbooth.itch.io/cardboard-conquest" target="_blank" rel="noopener">Play Act 1 free in your browser</a>,
     <a href="https://store.steampowered.com/app/4937370/" target="_blank" rel="noopener">wishlist the full game</a>, or
     <a href="https://store.steampowered.com/app/4998870/" target="_blank" rel="noopener">get the soundtrack</a>.
     Made by <a href="https://pbandgames.com" target="_blank" rel="noopener">PB&amp; Games</a>.
     <br>Streams the shipped <code>assets/music/*.ogg</code> straight off the build — served alongside this page.
     <br>If a track shows a ✕, the <code>assets/</code> folder isn't sitting next to this file where it's hosted.
   </footer>
+ </div>
 </div>
 
 <div id="walker"><img id="walkerImg" alt=""></div>
@@ -334,6 +415,15 @@ function titleOf(stem){
 // listed here — the general themes and the older hand-named boss themes — are named by their
 // stem already, so titleOf() is both the song name and the whole label.
 const SONGS = {
+  // Four older boss themes were titled after lords the game has since renamed, so they
+  // took a new title from their own chorus instead (see TRACK_TITLES in
+  // scripts/audio/audio_manager.gd — the game shows these same names now). The lord's
+  // CURRENT name still rides along underneath, out of LORD_NAMES.
+  "the_goblin_king": "The Goblins Are Hungry",
+  "the_skeletal_sovereign": "Bone in the Chair",
+  "the_verdant_queen": "Bow Before the Bloom",
+  "slime_king": "The World Will Be Mine",
+  "slime_lords_theme": "The Slime Lord's Theme",
   "pack_vanguard": "On Arrival",
   "pack_steel_legion": "Hold the Line",
   "pack_siege_works": "Hold and Fire",
@@ -418,12 +508,12 @@ const LORD_NAMES = {
   "lord_frost_pack":"Hoarfrost, the Rime-Jarl",
   "lord_frost_yeti":"The Frost Yeti",
   "lord_rime_harrows":"Sledge Hammarsson",
-  "lord_pale_rider":"The Pale Rider",
+  "lord_pale_rider":"Pale Rider",
   "lord_bone_rabble":"The Bone Rabble",
   "lord_grave_tide":"The Grave Tide",
   "lord_carrion_court":"The Carrion Court",
   "lord_dread_court":"The Dread Court",
-  "lord_banshee_choir":"Lamenta, the Dirge-Cantrix",
+  "lord_banshee_choir":"Lamenta",
   "lord_hushmaidens":"Mum, the Word",
   "lord_cursemonger":"The Cursemonger",
   "lord_silvertongue":"Silvertongue's Racket",
@@ -512,7 +602,7 @@ function playIndex(i){
   Object.values(trackEls).forEach(e=>e.classList.remove("playing","paused"));
   const el=trackEls[t.n]; if(el){ el.classList.add("playing");
     el.scrollIntoView({block:"nearest",behavior:"smooth"}); }
-  document.title = "▶ "+t.title+" — Warlords Jukebox";
+  document.title = "▶ "+t.title+" — Cardboard Conquest Jukebox";
   if(lyOpen) paintLyrics();
   bg.warm=1;
 }
@@ -717,45 +807,82 @@ $("startRec").onclick=()=>{
   playIndex(order[0]);
 };
 
-// ---- background: a living war-camp night (drifting embers + wandering glow) --
+// ---- background: the desk the game is played on ----------------------------
+// Was a war-camp night: a black-to-oxblood gradient with embers rising up it. That is
+// the Sable & Gold object, and the game has not been it since the papercraft merge, so
+// this is the same inversion the palette above makes -- A SELF-HEALING CUTTING MAT UNDER
+// A DESK LAMP. Not decoration borrowed from somewhere: UIKit._board_backdrop() already
+// draws every meta screen in the game as exactly this, and UIKit.cutting_mat() supplies
+// the pigment. The lamp hangs at the upper right the way Battlefield.LAMP_X puts it.
+//
+// The one behaviour worth keeping from the embers is that the room answered the music:
+// `warm` still eases toward 1 while something is playing, and here it lifts the lamp
+// rather than the sparks.
 const bgc=$("bg"), ctx=bgc.getContext("2d");
 const bg={warm:0};
-let W,H,embers=[];
-function resize(){ W=bgc.width=innerWidth*devicePixelRatio; H=bgc.height=innerHeight*devicePixelRatio;
+let W,H,motes=[],DPR=1;
+function resize(){ DPR=devicePixelRatio||1;
+  W=bgc.width=innerWidth*DPR; H=bgc.height=innerHeight*DPR;
   bgc.style.width=innerWidth+"px"; bgc.style.height=innerHeight+"px"; }
 addEventListener("resize",resize); resize();
-function seed(){ embers=[]; const N=Math.min(90,Math.floor(innerWidth/16));
-  for(let i=0;i<N;i++)embers.push(mkEmber(true)); }
-function mkEmber(any){ return {x:Math.random()*W, y:any?Math.random()*H:H+20,
-  r:(1+Math.random()*2.4)*devicePixelRatio, v:(0.3+Math.random()*0.9)*devicePixelRatio,
-  drift:(Math.random()-0.5)*0.5*devicePixelRatio, life:Math.random(), tw:Math.random()*6.28}; }
+// Paper dust hanging in the lamp light: the craft-desk answer to embers. It drifts and
+// settles instead of rising, which is the whole difference between a fire and a room.
+function mkMote(any){ return {x:Math.random()*W, y:any?Math.random()*H:-20,
+  r:(0.6+Math.random()*1.5)*DPR, v:(0.06+Math.random()*0.22)*DPR,
+  drift:(Math.random()-0.5)*0.22*DPR, tw:Math.random()*6.28}; }
+function seed(){ motes=[]; const N=Math.min(70,Math.floor(innerWidth/22));
+  for(let i=0;i<N;i++)motes.push(mkMote(true)); }
 seed();
 let tt=0;
 function frame(){
-  tt+=0.006; bg.warm+= ((cur>=0&&!audio.paused?1:0)-bg.warm)*0.02;
-  // base gradient
+  tt+=0.006; bg.warm += ((cur>=0 && !audio.paused ? 1 : 0) - bg.warm)*0.02;
+  // 1. the mat's vinyl pigment, a touch deeper at the bottom where the lamp doesn't reach
   const g=ctx.createLinearGradient(0,0,0,H);
-  g.addColorStop(0,"#07060d"); g.addColorStop(0.6,"#0e0912"); g.addColorStop(1,"#160a10");
+  g.addColorStop(0,"#2b4842"); g.addColorStop(.55,"#26413c"); g.addColorStop(1,"#1b302c");
   ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
-  // wandering warm glow (Lissajous) — brightens with the music
-  const gx=W*(0.5+0.32*Math.sin(tt*0.8)), gy=H*(0.66+0.2*Math.sin(tt*1.13+1));
-  const rad=Math.max(W,H)*(0.5+0.08*Math.sin(tt*1.7));
-  const glow=ctx.createRadialGradient(gx,gy,0,gx,gy,rad);
-  const a=0.10+0.16*bg.warm;
-  glow.addColorStop(0,`rgba(255,130,50,${a})`); glow.addColorStop(0.5,`rgba(150,40,60,${a*0.4})`);
-  glow.addColorStop(1,"rgba(0,0,0,0)");
-  ctx.fillStyle=glow; ctx.fillRect(0,0,W,H);
-  // embers
-  ctx.globalCompositeOperation="lighter";
-  for(const e of embers){
-    e.y-=e.v; e.x+=e.drift+Math.sin(e.y*0.01+e.tw)*0.3*devicePixelRatio; e.life-=0.0016;
-    if(e.y<-20||e.life<=0)Object.assign(e,mkEmber(false));
-    const fl=0.55+0.45*Math.sin(tt*6+e.tw);
-    const al=Math.max(0,Math.min(1,e.life))*fl*(0.5+0.5*bg.warm);
-    ctx.beginPath(); ctx.arc(e.x,e.y,e.r,0,6.28);
-    ctx.fillStyle=`rgba(255,${140+Math.floor(90*fl)},70,${al})`; ctx.fill();
+  // 2. the printed rule. A cutting mat is gridded in pale ink, one inch major with a
+  //    half-inch minor, and it is the single detail that makes the surface legible as a
+  //    mat rather than as a green background.
+  const cell=48*DPR;
+  ctx.lineWidth=DPR;
+  for(let i=0;i<2;i++){
+    const step = i ? cell : cell/2;
+    ctx.strokeStyle = i ? "rgba(226,215,192,.13)" : "rgba(226,215,192,.055)";
+    ctx.beginPath();
+    for(let x=(W%step)/2;x<W;x+=step){ ctx.moveTo(Math.round(x)+.5,0); ctx.lineTo(Math.round(x)+.5,H); }
+    for(let y=(H%step)/2;y<H;y+=step){ ctx.moveTo(0,Math.round(y)+.5); ctx.lineTo(W,Math.round(y)+.5); }
+    ctx.stroke();
   }
-  ctx.globalCompositeOperation="source-over";
+  // 3. knife scars. Fixed, not animated -- a mat that healed differently every frame
+  //    would be a screensaver. Seeded off a constant so they sit still across resizes.
+  ctx.strokeStyle="rgba(20,38,34,.5)"; ctx.lineWidth=1.6*DPR;
+  ctx.beginPath();
+  for(let i=0;i<26;i++){
+    const s=Math.sin(i*12.9898)*43758.5453, f=s-Math.floor(s);
+    const s2=Math.sin(i*78.233)*43758.5453, f2=s2-Math.floor(s2);
+    const x=f*W, y=f2*H, len=(40+f2*150)*DPR, ang=(f>.5?0:1.5708)+(f2-.5)*0.16;
+    ctx.moveTo(x,y); ctx.lineTo(x+Math.cos(ang)*len, y+Math.sin(ang)*len);
+  }
+  ctx.stroke();
+  // 4. the lamp, upper right, brightening while the music plays
+  const lx=W*(0.80+0.012*Math.sin(tt*0.7)), ly=H*(-0.08+0.01*Math.sin(tt*0.9));
+  const rad=Math.max(W,H)*1.05;
+  const lamp=ctx.createRadialGradient(lx,ly,0,lx,ly,rad);
+  const a=0.13+0.10*bg.warm;
+  lamp.addColorStop(0,`rgba(255,226,170,${a})`);
+  lamp.addColorStop(0.45,`rgba(255,205,140,${a*0.30})`);
+  lamp.addColorStop(1,"rgba(0,0,0,0)");
+  ctx.fillStyle=lamp; ctx.fillRect(0,0,W,H);
+  // 5. dust, only where the light is
+  for(const m of motes){
+    m.y+=m.v; m.x+=m.drift+Math.sin(m.y*0.008+m.tw)*0.14*DPR;
+    if(m.y>H+20)Object.assign(m,mkMote(false));
+    const lit=Math.max(0,1-Math.hypot(m.x-lx,m.y-ly)/(rad*0.72));
+    const al=(0.10+0.30*lit)*(0.55+0.45*bg.warm)*(0.6+0.4*Math.sin(tt*3+m.tw));
+    if(al<=0.01)continue;
+    ctx.beginPath(); ctx.arc(m.x,m.y,m.r,0,6.28);
+    ctx.fillStyle=`rgba(255,240,214,${al})`; ctx.fill();
+  }
   requestAnimationFrame(frame);
 }
 frame();
