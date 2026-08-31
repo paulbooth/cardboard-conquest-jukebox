@@ -356,7 +356,7 @@
   <p class="nohits hidden" id="noHits"></p>
 
   <footer>
-    All 74 tracks are from <a href="https://store.steampowered.com/app/4937370/" target="_blank" rel="noopener">Cardboard Conquest: Deckbuilding Autobattler</a>.
+    All <span id="footCount">—</span> tracks are from <a href="https://store.steampowered.com/app/4937370/" target="_blank" rel="noopener">Cardboard Conquest</a>.
     <a href="https://thepaulbooth.itch.io/cardboard-conquest" target="_blank" rel="noopener">Play Act 1 free in your browser</a>,
     <a href="https://store.steampowered.com/app/4937370/" target="_blank" rel="noopener">wishlist the full game</a>, or
     <a href="https://store.steampowered.com/app/4998870/" target="_blank" rel="noopener">get the soundtrack</a>.
@@ -379,9 +379,13 @@ const BASE = ((new URLSearchParams(location.search).get("base")) || "assets/").r
 //   Themes         = GENERAL_TRACKS (menu / battle / ambient, tied to no enemy)
 //   Lords & Bosses = ENEMY_TRACKS   (lord_* villain themes + hand-named boss themes)
 // Keep these in sync with those two constants whenever music is added.
+// "uncle_jim" is the one shipped song in NEITHER game constant -- JIM_THEME belongs to the
+// man rather than to a shuffle pool, so it plays only while he is on screen. It is still a
+// track that ships, so this page carries it under Themes; leaving it out was the only
+// reason the footer's count ever disagreed with assets/music.
 const THEMES = ["warlords_march","cards_of_fate","assemble_the_team","play_the_right_cards",
   "i_am_the_wave","is_there_anyone_listening","circus_in_the_back_of_my",
-  "hold_the_line_city","only_so_much_sky"];
+  "hold_the_line_city","only_so_much_sky","uncle_jim"];
 const PACKS = ["pack_vanguard","pack_steel_legion","pack_siege_works","pack_trapworks","pack_arcane_tempo",
   "pack_pyromancy","pack_infernal_legion","pack_chaos","pack_mutagen","pack_bugs","pack_slime_swarm",
   "pack_primordial_growth","pack_wild_pack","pack_giants","pack_blood","pack_heartbreakers",
@@ -555,6 +559,7 @@ GROUPS.forEach(g=>g.stems.forEach(s=>{
 }));
 TRACKS.forEach((t,i)=>t.n=i+1);
 document.getElementById("totCount").textContent = TRACKS.length;
+document.getElementById("footCount").textContent = TRACKS.length;
 document.getElementById("recChip").insertAdjacentHTML("afterbegin", STAR);
 document.getElementById("startRec").insertAdjacentHTML("afterbegin", STAR);
 
