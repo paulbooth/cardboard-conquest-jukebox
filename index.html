@@ -126,6 +126,11 @@
   button.ctl.play:hover{background:#a03227}
   button.ctl.on{background:var(--crimson);border-color:var(--crimson-lo);color:#fff8ec;
     box-shadow:0 2px 0 var(--crimson-lo),0 3px 8px rgba(0,0,0,.24)}
+  /* Share has nothing to hand out until a song is on */
+  button.ctl:disabled{opacity:.42;cursor:default;pointer-events:none}
+  /* a shared link opened the page on its song, but the browser held the sound back */
+  button.ctl.play.beckon{animation:beckon 1.7s ease-in-out infinite}
+  @media (prefers-reduced-motion:reduce){button.ctl.play.beckon{animation:none}}
   .np{flex:1;min-width:0}
   .np .title{font-size:18px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .np .kind{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--stamp);font-weight:700}
@@ -147,6 +152,15 @@
   .caret{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;
     border-top:6px solid currentColor;opacity:.75;transition:transform .2s}
   .ctl.on .caret{transform:rotate(180deg)}
+  /* a phone: Lyrics, All, Share and Shuffle share the player's width in four equal columns
+     rather than running off its right edge */
+  @media (max-width:560px){
+    .player .row .btns:last-child{flex:1 1 100%;display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+    .player .row .btns:last-child .ctl.wide{min-width:0;padding:0 4px;font-size:12.5px;gap:5px;
+      justify-content:center;overflow:hidden}
+  }
+  @media (max-width:420px){ #shuf svg{display:none} }
   .lyrics{position:relative;max-height:0;overflow:hidden;transition:max-height .28s ease;
     border-top:1px solid transparent;background:linear-gradient(180deg,#f4ecdc,#eae0c9)}
   .lyrics.open{max-height:min(48vh,460px);border-top-color:var(--rule)}
@@ -327,6 +341,8 @@
         <button class="ctl wide" id="lyr" title="Show the words to the playing track (L)"
                 aria-expanded="false" aria-controls="lyrics">Lyrics <span class="caret"></span></button>
         <button class="ctl wide" id="all" title="Play all in order">▶ All</button>
+        <button class="ctl wide" id="share" title="Copy a link that opens this page on the song that's on"
+                disabled><span class="lbl">Share</span></button>
         <button class="ctl wide" id="shuf" title="Shuffle"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1.4 4h2.6l3 4M9.2 12h2.9M1.4 12h2.6l6.1-8h1.8"/><path d="M11.6 2.2 13.9 4l-2.3 1.8M11.6 10.2l2.3 1.8-2.3 1.8"/></svg> Shuffle</button>
       </div>
     </div>
@@ -582,7 +598,8 @@ const ALIASES = {
 const EXT = {"warlords_rise":".mp3"};
 // The short list to hand someone who asks "which one should I put on first?"
 const REC = new Set(["slime_lords_theme","tremor_of_earth","circus_in_the_back_of_my",
-  "the_goblin_king","broodmother","assemble_the_team","bill_bill","lord_brass_pilgrims"]);
+  "the_goblin_king","broodmother","assemble_the_team","bill_bill","lord_brass_pilgrims",
+  "lord_floe_emperor"]);
 const STAR = '<svg class="star" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">'+
   '<path d="M12 2.1l3 6.2 6.8 1-4.9 4.8 1.2 6.8L12 17.6 5.9 20.9l1.2-6.8L2.2 9.3l6.8-1z"/></svg>';
 
@@ -601,6 +618,25 @@ GROUPS.forEach(g=>g.stems.forEach(s=>{
     alias:ALIASES[s]||"", rec:REC.has(s), file:BASE+"music/"+s+(EXT[s]||".ogg")});
 }));
 TRACKS.forEach((t,i)=>t.n=i+1);
+
+// A song's own address on this page: .../#emperor-of-the-floe. Made from the title, not the
+// file stem, so a link someone is handed reads as the song it plays. The stem works too
+// (#lord_floe_emperor), and a title two songs share falls back to the stem so every link
+// names exactly one song.
+const slugOf = s => s.toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g,"")
+  .replace(/&/g," and ").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+{ const seen={};
+  TRACKS.forEach(t=>{ const k=slugOf(t.title); seen[k]=(seen[k]||0)+1; });
+  TRACKS.forEach(t=>{ const k=slugOf(t.title); t.slug=(k && seen[k]===1) ? k : t.stem; }); }
+function trackOfLink(h){
+  h=(h||"").replace(/^#/,"");
+  try{ h=decodeURIComponent(h); }catch(e){}
+  h=h.trim().toLowerCase(); if(!h) return -1;
+  const k=slugOf(h);
+  return TRACKS.findIndex(t=>t.slug===h || t.stem===h || t.slug===k || slugOf(t.title)===k);
+}
+// keeps ?base= (and anything else in the query) so a link made on a test host plays there too
+const linkTo = t => location.href.split("#")[0] + "#" + t.slug;
 document.getElementById("totCount").textContent = TRACKS.length;
 document.getElementById("footCount").textContent = TRACKS.length;
 document.getElementById("recChip").insertAdjacentHTML("afterbegin", STAR);
@@ -641,18 +677,26 @@ const $=id=>document.getElementById(id);
 function fmt(s){ if(!isFinite(s)||s<0)s=0; const m=Math.floor(s/60),x=Math.floor(s%60);
   return m+":"+String(x).padStart(2,"0"); }
 
-function playIndex(i){
+function playIndex(i, fromLink){
   if(i<0||i>=TRACKS.length) return;
   if(cur===i){ togglePlay(); return; }
   cur=i; const t=TRACKS[i];
-  audio.src=t.file; audio.play().catch(()=>{});
+  const el=trackEls[t.n];
+  audio.src=t.file;
+  // A browser won't start sound on a page nobody has touched yet, which is exactly the state
+  // a shared link opens in: the song is cued and the play button beckons instead.
+  audio.play().catch(e=>{ if(e && e.name==="NotAllowedError" && cur===i){
+    if(el) el.classList.add("paused"); $("play").classList.add("beckon"); } });
   $("npTitle").textContent=t.title;
   $("npKind").textContent=t.faction ? t.group+" · "+t.faction : t.group;
   $("npKind").classList.remove("idle");
   Object.values(trackEls).forEach(e=>e.classList.remove("playing","paused"));
-  const el=trackEls[t.n]; if(el){ el.classList.add("playing");
-    el.scrollIntoView({block:"nearest",behavior:"smooth"}); }
+  if(el){ el.classList.add("playing");
+    el.scrollIntoView({block:fromLink?"center":"nearest",behavior:fromLink?"auto":"smooth"}); }
   document.title = "▶ "+t.title+" — Cardboard Conquest Jukebox";
+  // the address bar always names the song on, so copying it shares that song
+  try{ history.replaceState(null,"","#"+t.slug); }catch(e){}
+  $("share").disabled=false;
   if(lyOpen) paintLyrics();
   bg.warm=1;
 }
@@ -665,7 +709,7 @@ function step(d){ if(cur<0){ playIndex(order[0]); return; }
   k=(k+d+order.length)%order.length; playIndex(order[k]); }
 
 // The queue IS whatever the list is showing. Filter to Recommended and the whole transport —
-// play, next/prev, and the auto-advance when a track ends — stays inside those eight; clear
+// play, next/prev, and the auto-advance when a track ends — stays inside the starred few; clear
 // the filter and it's the full 74 again. Rebuilt whenever the visible set changes, so it
 // doesn't matter whether you got here by pressing All or just by clicking a track.
 const shuffled = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));
@@ -686,7 +730,30 @@ $("all").onclick=()=>{ shuffle=false; $("shuf").classList.remove("on");
 $("shuf").onclick=()=>{ shuffle=!shuffle; $("shuf").classList.toggle("on",shuffle);
   syncQueue(true); if(shuffle) playIndex(order[0]); };
 
-audio.addEventListener("play", ()=>{ $("play").textContent="⏸";
+// Share hands out a link to the song that's on: a phone's own share sheet where there is one,
+// the clipboard everywhere else.
+let shareTimer=0;
+function shareSay(s){ const l=$("share").querySelector(".lbl"); l.textContent=s;
+  clearTimeout(shareTimer); shareTimer=setTimeout(()=>l.textContent="Share",1900); }
+function copyText(s){
+  if(navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(s);
+  return new Promise((ok,no)=>{ const ta=document.createElement("textarea"); ta.value=s;
+    ta.setAttribute("readonly",""); ta.style.cssText="position:fixed;left:-9999px;top:0";
+    document.body.appendChild(ta); ta.select();
+    let done=false; try{ done=document.execCommand("copy"); }catch(e){}
+    ta.remove(); done ? ok() : no(); });
+}
+$("share").onclick=()=>{
+  if(cur<0) return;
+  const t=TRACKS[cur], url=linkTo(t);
+  if(navigator.share && matchMedia("(pointer:coarse)").matches){
+    navigator.share({title:t.title+" - Cardboard Conquest", url}).catch(()=>{});
+    return;
+  }
+  copyText(url).then(()=>shareSay("Link copied"), ()=>window.prompt("Copy this link:", url));
+};
+
+audio.addEventListener("play", ()=>{ $("play").textContent="⏸"; $("play").classList.remove("beckon");
   document.body.classList.add("played");        // the front-door button can stop beckoning now
   if(cur>=0&&trackEls[TRACKS[cur].n]) trackEls[TRACKS[cur].n].classList.remove("paused"); bg.warm=1; });
 audio.addEventListener("pause", ()=>{ $("play").textContent="▶";
@@ -1059,6 +1126,21 @@ const LYRICS = {
 
 // declared last, so restore the saved drawer state only now
 try{ if(localStorage.getItem("wl_jukebox_lyrics")==="1") toggleLyrics(true); }catch(e){}
+
+// A link to one song (#emperor-of-the-floe) opens on that song, cued and centred, playing if the
+// browser allows it. Also after load, when the address is edited by hand. Runs here, after
+// LYRICS, because cueing a song with the drawer open paints its words.
+function cueFromLink(){
+  const i=trackOfLink(location.hash); if(i<0) return;
+  const el=trackEls[TRACKS[i].n];
+  // a song the search or a chip is hiding: clear them, the link outranks the filter
+  if(el && (el.classList.contains("hidden") || el.closest("section.grp").classList.contains("hidden"))){
+    $("q").value=""; pickChip("all"); }
+  if(cur===i){ if(audio.paused) audio.play().catch(()=>{}); return; }
+  playIndex(i, true);
+}
+addEventListener("hashchange", cueFromLink);
+cueFromLink();
 </script>
 </body>
 </html>
